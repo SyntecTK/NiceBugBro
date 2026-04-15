@@ -16,6 +16,7 @@ public class UpgradePanelScript : MonoBehaviour
 
     public void ButtonPressed()
     {
+        Debug.Log("Button clicked");
         GameManager.Instance.UpgradeChosen(_upgrade);
     }
 }
