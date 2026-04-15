@@ -47,26 +47,23 @@ public class UpgradeManager : MonoBehaviour
 
     private void PopulateUpgradeMenu()
     {
+        if (thisRunUpgrades.Count < 2)
+        {
+            Debug.LogError("Not enough upgrades");
+            return;
+        }
         GameObject leftUpgrade = Instantiate(upgradePanelPrefab, leftPanel.transform);
-        TMP_Text upgradeTitle = leftUpgrade.transform.GetChild(0).GetComponent<TMP_Text>();
-        TMP_Text upgradeDescription = leftUpgrade.transform.GetChild(1).GetComponent<TMP_Text>();
-        UpgradeButton upgradeButton = leftUpgrade.transform.GetChild(2).GetComponent<UpgradeButton>();
+        UpgradePanelScript leftUpgradePanel = leftUpgrade.GetComponent<UpgradePanelScript>();
 
         Upgrade randomUpgrade = thisRunUpgrades[Random.Range(0, thisRunUpgrades.Count)];
-        upgradeTitle.text = randomUpgrade.upgradeName;
-        upgradeDescription.text = randomUpgrade.description;
-        upgradeButton.Initialize(randomUpgrade);
+        leftUpgradePanel.Initialize(randomUpgrade);
         thisRunUpgrades.Remove(randomUpgrade);
 
         GameObject rightUpgrade = Instantiate(upgradePanelPrefab, rightPanel.transform);
-        TMP_Text upgradeTitle2 = rightUpgrade.transform.GetChild(0).GetComponent<TMP_Text>();
-        TMP_Text upgradeDescription2 = rightUpgrade.transform.GetChild(1).GetComponent<TMP_Text>();
-        UpgradeButton upgradeButton2 = rightUpgrade.transform.GetChild(2).GetComponent<UpgradeButton>();
+        UpgradePanelScript rightUpgradePanel = rightUpgrade.GetComponent<UpgradePanelScript>();
 
         Upgrade randomUpgrade2 = thisRunUpgrades[Random.Range(0, thisRunUpgrades.Count)];
-        upgradeTitle2.text = randomUpgrade2.upgradeName;
-        upgradeDescription2.text = randomUpgrade2.description;
-        upgradeButton2.Initialize(randomUpgrade2);
+        rightUpgradePanel.Initialize(randomUpgrade2);
         thisRunUpgrades.Remove(randomUpgrade2);
     }
 }
