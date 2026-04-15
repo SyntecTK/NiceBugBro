@@ -4,29 +4,47 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-    [Header("PlayerStats")]
-    [SerializeField] private float speed = 5f;
-    [SerializeField] private float lookSensitivity = 0.15f;
-    [SerializeField] private float minPitch = -80f;
-    [SerializeField] private float maxPitch = 80f;
-    [SerializeField] private float jumpForce = 100f;
+    public static PlayerController Instance { get; private set; }
+
+    [Header("PlayerStats")] 
+    [SerializeField] private float speed;
+    [SerializeField] private float lookSensitivity;
+    [SerializeField] private float minPitch;
+    [SerializeField] private float maxPitch;
+    [SerializeField] private float jumpForce;
+    [SerializeField] private float currentJumpForce;
+    [SerializeField] private int health;
+    [SerializeField] private int currentHealth;
 
     private Vector2 moveInput;
     private Vector2 lookInput;
     private float pitch;
 
-    [Header("References")]
-    [SerializeField] private Transform firePoint;
+    [Header("References")] [SerializeField]
+    private Transform firePoint;
+
     [SerializeField] private GameObject bulletPrefab;
 
-    [Header("BulletStats")]
-    [SerializeField] private int damage = 10;
-    [SerializeField] private float bulletSpeed = 20f;
+    [Header("BulletStats")] 
+    [SerializeField] private int bulletDamage;
+
+    [SerializeField] private int currentBulletDamage;
+    [SerializeField] private float bulletSpeed;
 
     private bool isJumping;
 
     private void Start()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
@@ -71,6 +89,7 @@ public class PlayerController : MonoBehaviour
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
         bullet.GetComponent<Rigidbody>().linearVelocity = firePoint.forward * bulletSpeed;
     }
+
     private void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
@@ -88,7 +107,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnInteract(InputValue value)
     {
-        Debug.Log("Collected Upgrade");
         EventManager.OnCollectedUpgrade();
         GameManager.Instance.EnterUpgradeMode();
     }
@@ -97,5 +115,15 @@ public class PlayerController : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         isJumping = false;
+    }
+
+    private void OnDamaged(int damage)
+    {
+        if (damage < 0) return;
+        currentHealth -= damage;
+        if (currentHealth <= 0)
+        {
+            //Hier Game Beendung etc.
+        }
     }
 }
