@@ -1,12 +1,15 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("PlayerStats")]
     [SerializeField] private float speed = 5f;
     [SerializeField] private float lookSensitivity = 0.15f;
     [SerializeField] private float minPitch = -80f;
     [SerializeField] private float maxPitch = 80f;
+    [SerializeField] private float jumpForce = 100f;
 
     private Vector2 moveInput;
     private Vector2 lookInput;
@@ -20,6 +23,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int damage = 10;
     [SerializeField] private float bulletSpeed = 20f;
 
+    private bool isJumping;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -30,6 +35,8 @@ public class PlayerController : MonoBehaviour
     {
         HandleMovement();
         HandleLook();
+        transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
+
     }
 
     private void HandleMovement()
@@ -50,6 +57,14 @@ public class PlayerController : MonoBehaviour
         lookInput = Vector2.zero;
     }
 
+    private void HandleJump()
+    {
+        if (isJumping) return;
+        isJumping = true;
+        GetComponent<Rigidbody>().AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        StartCoroutine(JumpTimer());
+    }
+
     //---------------------------------- InputActions ----------------------------------
     private void OnAttack()
     {
@@ -65,5 +80,16 @@ public class PlayerController : MonoBehaviour
     private void OnLook(InputValue value)
     {
         lookInput = value.Get<Vector2>();
+    }
+
+    private void OnJump(InputValue value)
+    {
+        HandleJump();
+    }
+
+    private IEnumerator JumpTimer()
+    {
+        yield return new WaitForSeconds(1f);
+        isJumping = false;
     }
 }

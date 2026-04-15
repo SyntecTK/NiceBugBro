@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -14,6 +15,11 @@ public class Bullet : MonoBehaviour
     private IEnumerator SelfDestroy()
     {
         yield return new WaitForSeconds(lifeTime);
+        Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
         Destroy(gameObject);
     }
 }
