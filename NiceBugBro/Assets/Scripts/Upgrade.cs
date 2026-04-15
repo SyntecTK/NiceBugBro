@@ -3,6 +3,20 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Upgrade", menuName = "Upgrades/Upgrade")]
 public class Upgrade : ScriptableObject
 {
+    [Header("General")]
     public string upgradeName;
     public string description;
+    
+    
+    [Header("Stats")]
+    public int playerSpeedUpgrade;
+    public int bulletSpeedUpgrade;
+    public int bulletDamageUpgrade;
+    public int healthUpgrade;
+    public int jumpUpgrade;
+
+    [Header("Gameplay Changes")]
+    public bool minimap;
+    public bool fiveShot;
+    
 }
