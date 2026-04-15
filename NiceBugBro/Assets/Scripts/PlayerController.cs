@@ -36,7 +36,6 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         HandleLook();
         transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
-
     }
 
     private void HandleMovement()
@@ -85,6 +84,13 @@ public class PlayerController : MonoBehaviour
     private void OnJump(InputValue value)
     {
         HandleJump();
+    }
+
+    private void OnInteract(InputValue value)
+    {
+        Debug.Log("Collected Upgrade");
+        EventManager.OnCollectedUpgrade();
+        GameManager.Instance.EnterUpgradeMode();
     }
 
     private IEnumerator JumpTimer()
