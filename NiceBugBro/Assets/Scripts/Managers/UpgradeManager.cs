@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -66,4 +67,6 @@ public class UpgradeManager : MonoBehaviour
         rightUpgradePanel.Initialize(randomUpgrade2);
         thisRunUpgrades.Remove(randomUpgrade2);
     }
+    
+
 }

@@ -10,7 +10,7 @@ public class UpgradePanelScript : MonoBehaviour
     public void Initialize(Upgrade upgrade)
     {
         _upgrade = upgrade;
-        title.text = _upgrade.name;
+        title.text = _upgrade.upgradeName;
         description.text = _upgrade.description;
     }
 

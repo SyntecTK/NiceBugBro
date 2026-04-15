@@ -233,15 +233,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   speed: 5
+  currentSpeed: 5
   lookSensitivity: 0.15
   minPitch: -80
   maxPitch: 80
   jumpForce: 10
+  currentJumpForce: 10
   health: 100
   currentHealth: 100
   firePoint: {fileID: 1333381457}
   bulletPrefab: {fileID: 4797593627450792054, guid: e41b3c73d071a0442b014e4e1375af58, type: 3}
   bulletDamage: 10
+  currentBulletDamage: 0
   bulletSpeed: 20
 --- !u!114 &271680341
 MonoBehaviour:
