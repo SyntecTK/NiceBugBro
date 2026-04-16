@@ -11,7 +11,7 @@ public class Bullet : MonoBehaviour
     private bool _ricochet;
     private int _ricochetAmount;
     [SerializeField] private Rigidbody _rigidbody;
-    
+
 
     public void Initialize()
     {
@@ -30,12 +30,12 @@ public class Bullet : MonoBehaviour
         _ricochetAmount = 0;
         StartCoroutine(SelfDestroy());
     }
-    
+
     public void Initialize(int damage, float lifeTime, bool ricochet, int ricochetAmount)
     {
         _damage = damage;
         _lifeTime = lifeTime;
-        _ricochet = ricochet;   
+        _ricochet = ricochet;
         _ricochetAmount = ricochetAmount;
         StartCoroutine(SelfDestroy());
     }
@@ -53,6 +53,7 @@ public class Bullet : MonoBehaviour
             if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Enemy"))
             {
                 other.gameObject.GetComponent<IDamageable>().TakeDamage(_damage);
+                Debug.Log("Damaged");
             }
             DestroyBullet();
             return;
@@ -66,8 +67,8 @@ public class Bullet : MonoBehaviour
 
     private void Ricochet(Collision other)
     {
-        if(_ricochetAmount < 1) DestroyBullet();
-        
+        if (_ricochetAmount < 1) DestroyBullet();
+
         ContactPoint contact = other.contacts[0];
         Vector3 normal = contact.normal;
 

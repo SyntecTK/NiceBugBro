@@ -84,6 +84,8 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             isGrounded = false;
         }
+
+        rb.angularVelocity = Vector3.zero;
     }
 
     private void HandleMovement()
@@ -241,7 +243,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     public void RicochetUpgrade()
     {
-        if(!ricochet) ricochet = true;
+        if (!ricochet) ricochet = true;
 
         ricochetAmount += 2;
     }
@@ -250,10 +252,10 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         Quaternion bulletRotation = Quaternion.Euler(bulletPrefab.transform.eulerAngles.x, transform.eulerAngles.y, 0f);
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
-        
-        if(ricochet) bullet.GetComponent<Bullet>().Initialize(currentBulletDamage, currentBulletLifeTime, ricochet, ricochetAmount);
+
+        if (ricochet) bullet.GetComponent<Bullet>().Initialize(currentBulletDamage, currentBulletLifeTime, ricochet, ricochetAmount);
         else bullet.GetComponent<Bullet>().Initialize(currentBulletDamage);
-        
+
         bullet.GetComponent<Rigidbody>().linearVelocity = firePoint.forward * currentBulletSpeed;
     }
 
