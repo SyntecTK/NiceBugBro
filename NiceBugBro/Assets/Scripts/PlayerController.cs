@@ -1,7 +1,6 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
@@ -153,8 +152,9 @@ public class PlayerController : MonoBehaviour
 
     private void OnInteract(InputValue value)
     {
-        EventManager.OnCollectedUpgrade();
-        GameManager.Instance.EnterUpgradeMode();
+        //TODO: das hier komplett löschen?
+        //EventManager.OnCollectedUpgrade();
+        //GameManager.Instance.EnterUpgradeMode();
     }
 
     private IEnumerator JumpTimer()
@@ -195,6 +195,8 @@ public class PlayerController : MonoBehaviour
         currentBulletSpeed = bulletSpeed;
 
         //TODO: Hier resets für die FuckeryAbilities
+        burstShot = false;
+        burstShotAmount = 0;
         burstShotCounter = 0;
     }
 
