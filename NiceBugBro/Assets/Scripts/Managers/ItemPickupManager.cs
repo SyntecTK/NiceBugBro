@@ -29,7 +29,7 @@ public class ItemPickupManager : MonoBehaviour
     private void SpawnNewPickup()
     {
         GameObject newPickup = spawnPoints[Random.Range(0, spawnPoints.Count)];
-        Instantiate(pickupPrefab, newPickup.transform.position, newPickup.transform.rotation);
+        Instantiate(pickupPrefab, newPickup.transform.position, pickupPrefab.transform.rotation);
         pickupCurrentlyReady = true;
     }
 
