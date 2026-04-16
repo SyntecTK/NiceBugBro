@@ -244,7 +244,7 @@ MonoBehaviour:
   currentBulletDamage: 0
   currentBulletSpeed: 0
   minimap: 0
-  fiveShot: 0
+  burstShot: 0
   isGrounded: 0
 --- !u!114 &271680341
 MonoBehaviour:
@@ -869,7 +869,9 @@ MonoBehaviour:
   upgradeMenu: {fileID: 1875477916}
   upgradePanelPrefab: {fileID: 5406624152214818736, guid: c3c739a06d987884ba9b0c1912587ba9, type: 3}
   leftPanel: {fileID: 2006655488}
+  currentLeftPanel: {fileID: 0}
   rightPanel: {fileID: 1948181220}
+  currentRightPanel: {fileID: 0}
   upgrades:
   - {fileID: 11400000, guid: 9a85abac8f5c709449de503a99765398, type: 2}
   - {fileID: 11400000, guid: 99706d01c8c89d34bb6c7d7f6af3593a, type: 2}
