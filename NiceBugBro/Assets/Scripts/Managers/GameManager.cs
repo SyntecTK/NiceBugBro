@@ -27,8 +27,9 @@ public class GameManager : MonoBehaviour
         _upgradeScreen.SetActive(true);
     }
 
-    public void ExitUpgradeMode()
+    public void ExitUpgradeMode(Upgrade upgrade)
     {
+        UpgradeManager.Instance.ExitUpgradeMenu(upgrade);
         Time.timeScale = 1f;
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -47,6 +48,6 @@ public class GameManager : MonoBehaviour
         if (upgrade.minimap) PlayerController.Instance.MinimapUpgrade();
         if (upgrade.fiveShot) PlayerController.Instance.FiveShotUpgrade();
 
-        ExitUpgradeMode();
+        ExitUpgradeMode(upgrade);
     }
 }

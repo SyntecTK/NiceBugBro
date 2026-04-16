@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 public class PlayerController : MonoBehaviour
 {
@@ -36,9 +37,10 @@ public class PlayerController : MonoBehaviour
 
     [Header("GamePlay Changes")]
     [SerializeField] private bool minimap;
-    [SerializeField] private bool fiveShot;
+    [SerializeField] private bool burstShot;
 
-    private int fiveShotCounter;
+    private int burstShotAmount;
+    private int burstShotCounter;
     private bool isJumping;
     [SerializeField] private bool isGrounded;
 
@@ -119,13 +121,13 @@ public class PlayerController : MonoBehaviour
     //---------------------------------- InputActions ----------------------------------
     private void OnAttack()
     {
-        if (fiveShot)
+        if (burstShot)
         {
-            fiveShotCounter++;
-            if (fiveShotCounter >= 5)
+            burstShotCounter++;
+            if (burstShotCounter >= burstShotAmount)
             {
-                StartCoroutine(FiveShotStart(fiveShotCounter));
-                fiveShotCounter = 0;
+                StartCoroutine(FiveShotStart(burstShotCounter));
+                burstShotCounter = 0;
             }
             return;
         }
@@ -193,7 +195,7 @@ public class PlayerController : MonoBehaviour
         currentBulletSpeed = bulletSpeed;
 
         //TODO: Hier resets für die FuckeryAbilities
-        fiveShotCounter = 0;
+        burstShotCounter = 0;
     }
 
     public void UpgradePlayerSpeed(int amount)
@@ -228,7 +230,8 @@ public class PlayerController : MonoBehaviour
 
     public void FiveShotUpgrade()
     {
-        fiveShot = true;
+        if (!burstShot) burstShot = true;
+        burstShotAmount += 5;
     }
 
 }

@@ -10,7 +10,9 @@ public class UpgradeManager : MonoBehaviour
     [SerializeField] private GameObject upgradeMenu;
     [SerializeField] private GameObject upgradePanelPrefab;
     [SerializeField] private GameObject leftPanel;
+    [SerializeField] private GameObject currentLeftPanel;
     [SerializeField] private GameObject rightPanel;
+    [SerializeField] private GameObject currentRightPanel;
     [SerializeField] private List<Upgrade> upgrades;
     private List<Upgrade> thisRunUpgrades;
 
@@ -53,19 +55,25 @@ public class UpgradeManager : MonoBehaviour
             Debug.LogError("Not enough upgrades");
             return;
         }
-        GameObject leftUpgrade = Instantiate(upgradePanelPrefab, leftPanel.transform);
-        UpgradePanelScript leftUpgradePanel = leftUpgrade.GetComponent<UpgradePanelScript>();
+        currentLeftPanel = Instantiate(upgradePanelPrefab, leftPanel.transform);
+        UpgradePanelScript leftUpgradePanelScript = currentLeftPanel.GetComponent<UpgradePanelScript>();
 
-        Upgrade randomUpgrade = thisRunUpgrades[Random.Range(0, thisRunUpgrades.Count)];
-        leftUpgradePanel.Initialize(randomUpgrade);
-        thisRunUpgrades.Remove(randomUpgrade);
+        Upgrade leftUpgrade = thisRunUpgrades[Random.Range(0, thisRunUpgrades.Count)];
+        leftUpgradePanelScript.Initialize(leftUpgrade);
 
-        GameObject rightUpgrade = Instantiate(upgradePanelPrefab, rightPanel.transform);
-        UpgradePanelScript rightUpgradePanel = rightUpgrade.GetComponent<UpgradePanelScript>();
+        currentRightPanel = Instantiate(upgradePanelPrefab, rightPanel.transform);
+        UpgradePanelScript rightUpgradePanelScript = currentRightPanel.GetComponent<UpgradePanelScript>();
 
-        Upgrade randomUpgrade2 = thisRunUpgrades[Random.Range(0, thisRunUpgrades.Count)];
-        rightUpgradePanel.Initialize(randomUpgrade2);
-        thisRunUpgrades.Remove(randomUpgrade2);
+        Upgrade rightUpgrade = thisRunUpgrades[Random.Range(0, thisRunUpgrades.Count)];
+        rightUpgradePanelScript.Initialize(rightUpgrade);
+    }
+
+
+    public void ExitUpgradeMenu(Upgrade upgrade)
+    {
+        if(upgrade.unique) thisRunUpgrades.Remove(upgrade);
+        Destroy(currentLeftPanel);
+        Destroy(currentRightPanel);
     }
     
 

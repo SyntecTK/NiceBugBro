@@ -6,6 +6,7 @@ public class Upgrade : ScriptableObject
     [Header("General")]
     public string upgradeName;
     public string description;
+    public bool unique;
     
     
     [Header("Stats")]
