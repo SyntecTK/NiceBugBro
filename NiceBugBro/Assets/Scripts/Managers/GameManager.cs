@@ -42,11 +42,13 @@ public class GameManager : MonoBehaviour
         if (upgrade.playerSpeedUpgrade != 0) PlayerController.Instance.UpgradePlayerSpeed(upgrade.playerSpeedUpgrade);
         if (upgrade.bulletSpeedUpgrade != 0) PlayerController.Instance.UpgradeBulletSpeed(upgrade.bulletSpeedUpgrade);
         if (upgrade.bulletDamageUpgrade != 0) PlayerController.Instance.UpgradeBulletDamage(upgrade.bulletDamageUpgrade);
+        if (upgrade.bulletLifeTimeUpgrade != 0) PlayerController.Instance.UpgradeBulletLifeTime(upgrade.bulletLifeTimeUpgrade);
         if (upgrade.healthUpgrade != 0) PlayerController.Instance.UpgradeHealth(upgrade.healthUpgrade);
         if (upgrade.jumpUpgrade != 0) PlayerController.Instance.UpgradeJump(upgrade.jumpUpgrade);
 
         if (upgrade.minimap) PlayerController.Instance.MinimapUpgrade();
-        if (upgrade.fiveShot) PlayerController.Instance.FiveShotUpgrade();
+        if (upgrade.fiveShot) PlayerController.Instance.BurstShotUpgrade();
+        if (upgrade.ricochet) PlayerController.Instance.RicochetUpgrade();
 
         ExitUpgradeMode(upgrade);
     }

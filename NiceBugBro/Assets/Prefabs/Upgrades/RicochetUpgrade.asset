@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1f745e3ddfae3024f93fe9a40614cd49, type: 3}
-  m_Name: MiniMapUpgrade
+  m_Name: RicochetUpgrade
   m_EditorClassIdentifier: Assembly-CSharp::Upgrade
-  upgradeName: Mini Map
-  description: Gain access to a Minimap!
-  unique: 1
+  upgradeName: Ricochet
+  description: Your Bullets now bounce of Terrain!
+  unique: 0
   playerSpeedUpgrade: 0
   bulletSpeedUpgrade: 0
   bulletDamageUpgrade: 0
-  bulletLifeTimeUpgrade: 0
+  bulletLifeTimeUpgrade: 3
   healthUpgrade: 0
   jumpUpgrade: 0
-  minimap: 1
+  minimap: 0
   fiveShot: 0
-  ricochet: 0
+  ricochet: 1

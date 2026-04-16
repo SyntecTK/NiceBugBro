@@ -13,11 +13,13 @@ public class Upgrade : ScriptableObject
     public int playerSpeedUpgrade;
     public int bulletSpeedUpgrade;
     public int bulletDamageUpgrade;
+    public float bulletLifeTimeUpgrade;
     public int healthUpgrade;
     public int jumpUpgrade;
 
     [Header("Gameplay Changes")]
     public bool minimap;
     public bool fiveShot;
+    public bool ricochet;
     
 }

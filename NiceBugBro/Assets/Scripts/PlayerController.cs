@@ -2,17 +2,17 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable
 {
     public static PlayerController Instance { get; private set; }
 
     [Header("PlayerStats")]
     [SerializeField] private int currentHealth;
     private int health = 100;
-    private float speed = 10;
     [SerializeField] private float currentSpeed;
-    private float jumpForce = 15;
+    private float speed = 10;
     [SerializeField] private float currentJumpForce;
+    private float jumpForce = 15;
     [SerializeField] private float minPitch;
     [SerializeField] private float maxPitch;
     [SerializeField] private float lookSensitivity;
@@ -31,13 +31,17 @@ public class PlayerController : MonoBehaviour
     [Header("BulletStats")]
     [SerializeField] private int currentBulletDamage;
     private int bulletDamage = 10;
-    private float bulletSpeed = 50;
     [SerializeField] private float currentBulletSpeed;
+    private float bulletSpeed = 50;
+    [SerializeField] private float currentBulletLifeTime;
+    private float bulletLifeTime = 3f;
 
     [Header("GamePlay Changes")]
     [SerializeField] private bool minimap;
     [SerializeField] private bool burstShot;
+    [SerializeField] private bool ricochet;
 
+    private int ricochetAmount;
     private int burstShotAmount;
     private int burstShotCounter;
     private bool isJumping;
@@ -125,14 +129,13 @@ public class PlayerController : MonoBehaviour
             burstShotCounter++;
             if (burstShotCounter >= burstShotAmount)
             {
-                StartCoroutine(FiveShotStart(burstShotCounter));
+                StartCoroutine(BurstShotStart(burstShotCounter));
                 burstShotCounter = 0;
             }
             return;
         }
-        Quaternion bulletRotation = Quaternion.Euler(bulletPrefab.transform.eulerAngles.x, transform.eulerAngles.y, 0f);
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
-        bullet.GetComponent<Rigidbody>().linearVelocity = firePoint.forward * currentBulletSpeed;
+
+        ShootBullet();
     }
 
     private void OnMove(InputValue value)
@@ -150,20 +153,13 @@ public class PlayerController : MonoBehaviour
         HandleJump();
     }
 
-    private void OnInteract(InputValue value)
-    {
-        //TODO: das hier komplett löschen?
-        //EventManager.OnCollectedUpgrade();
-        //GameManager.Instance.EnterUpgradeMode();
-    }
-
     private IEnumerator JumpTimer()
     {
         yield return new WaitForSeconds(1f);
         isJumping = false;
     }
 
-    private void OnDamaged(int damage)
+    public void TakeDamage(int damage)
     {
         if (damage < 0) return;
         currentHealth -= damage;
@@ -174,13 +170,11 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    private IEnumerator FiveShotStart(int fiveShotCount)
+    private IEnumerator BurstShotStart(int fiveShotCount)
     {
         for (int i = 0; i < fiveShotCount; i++)
         {
-            Quaternion bulletRotation = Quaternion.Euler(bulletPrefab.transform.eulerAngles.x, transform.eulerAngles.y, 0f);
-            GameObject bullet = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
-            bullet.GetComponent<Rigidbody>().linearVelocity = firePoint.forward * currentBulletSpeed;
+            ShootBullet();
             yield return new WaitForSeconds(0.02f);
         }
     }
@@ -193,11 +187,15 @@ public class PlayerController : MonoBehaviour
         currentJumpForce = jumpForce;
         currentSpeed = speed;
         currentBulletSpeed = bulletSpeed;
+        currentBulletLifeTime = bulletLifeTime;
 
         //TODO: Hier resets für die FuckeryAbilities
         burstShot = false;
         burstShotAmount = 0;
         burstShotCounter = 0;
+        minimap = false;
+        ricochet = false;
+        ricochetAmount = 0;
     }
 
     public void UpgradePlayerSpeed(int amount)
@@ -214,6 +212,10 @@ public class PlayerController : MonoBehaviour
     {
         currentBulletDamage += amount;
     }
+    public void UpgradeBulletLifeTime(float amount)
+    {
+        currentBulletLifeTime += amount;
+    }
 
     public void UpgradeHealth(int amount)
     {
@@ -227,13 +229,32 @@ public class PlayerController : MonoBehaviour
 
     public void MinimapUpgrade()
     {
+        minimap = true;
         //TODO: Hier MinimapFuckery
     }
 
-    public void FiveShotUpgrade()
+    public void BurstShotUpgrade()
     {
         if (!burstShot) burstShot = true;
         burstShotAmount += 5;
+    }
+
+    public void RicochetUpgrade()
+    {
+        if(!ricochet) ricochet = true;
+
+        ricochetAmount += 2;
+    }
+
+    private void ShootBullet()
+    {
+        Quaternion bulletRotation = Quaternion.Euler(bulletPrefab.transform.eulerAngles.x, transform.eulerAngles.y, 0f);
+        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
+        
+        if(ricochet) bullet.GetComponent<Bullet>().Initialize(currentBulletDamage, currentBulletLifeTime, ricochet, ricochetAmount);
+        else bullet.GetComponent<Bullet>().Initialize(currentBulletDamage);
+        
+        bullet.GetComponent<Rigidbody>().linearVelocity = firePoint.forward * currentBulletSpeed;
     }
 
 }
