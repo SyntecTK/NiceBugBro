@@ -262,6 +262,7 @@ MonoBehaviour:
   currentBulletLifeTime: 0
   minimap: 0
   burstShot: 0
+  spreadShot: 0
   ricochet: 0
   isGrounded: 0
 --- !u!114 &271680341
@@ -464,7 +465,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &329667547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -972,15 +973,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1085167608e8da4438640624f3fb4adc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeManager
-  upgradeMenu: {fileID: 0}
+  upgradeMenu: {fileID: 529160044}
   upgradePanelPrefab: {fileID: 5406624152214818736, guid: c3c739a06d987884ba9b0c1912587ba9, type: 3}
-  leftPanel: {fileID: 0}
+  leftPanel: {fileID: 716215298}
   currentLeftPanel: {fileID: 0}
-  rightPanel: {fileID: 0}
+  rightPanel: {fileID: 1805622950}
   currentRightPanel: {fileID: 0}
   upgrades:
   - {fileID: 11400000, guid: 9a85abac8f5c709449de503a99765398, type: 2}
   - {fileID: 11400000, guid: 99706d01c8c89d34bb6c7d7f6af3593a, type: 2}
+  - {fileID: 11400000, guid: 193a97f11a9a7de4aadbfbe9cdd3bbaa, type: 2}
 --- !u!4 &684168638
 Transform:
   m_ObjectHideFlags: 0
@@ -996,6 +998,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &716215298 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5181709564278352129, guid: 4c843b1b351862040b5ae8b1b4f46c84, type: 3}
+  m_PrefabInstance: {fileID: 734160084}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &734160084
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1716,7 +1723,7 @@ Transform:
   m_GameObject: {fileID: 1333381456}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 2.1599994, y: 0.3436211, z: 0.044999972}
+  m_LocalPosition: {x: 2.27, y: 0.3436211, z: 0.04}
   m_LocalScale: {x: 3.225806, y: 3.2258072, z: 3.2258065}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1937,6 +1944,11 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 1279942488438069247, guid: e5e7e775164b36f41b8c7f2fbbf23ee1, type: 3}
+--- !u!1 &1805622950 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3152802846083452636, guid: 4c843b1b351862040b5ae8b1b4f46c84, type: 3}
+  m_PrefabInstance: {fileID: 734160084}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1908869791
 GameObject:
   m_ObjectHideFlags: 0
