@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -5,6 +6,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [SerializeField] private GameObject _upgradeScreen;
+
+    [Header("UI References")]
+    [SerializeField] private TMP_Text timeTXT;
 
     private void Awake()
     {
@@ -51,5 +55,13 @@ public class GameManager : MonoBehaviour
         if (upgrade.ricochet) PlayerController.Instance.RicochetUpgrade();
 
         ExitUpgradeMode(upgrade);
+    }
+
+    private void UpdateTimeDisplay()
+    {
+        float time = Time.timeSinceLevelLoad;
+        int minutes = Mathf.FloorToInt(time / 60f);
+        int seconds = Mathf.FloorToInt(time % 60f);
+        timeTXT.text = string.Format("{0:00}:{1:00}", minutes, seconds);
     }
 }
