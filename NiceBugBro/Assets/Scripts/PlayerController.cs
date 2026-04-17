@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     [Header("GamePlay Changes")]
     [SerializeField] private bool minimap;
     [SerializeField] private bool burstShot;
+    [SerializeField] private bool spreadShot;
     [SerializeField] private bool ricochet;
 
     private int ricochetAmount;
@@ -167,6 +168,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         if (damage < 0) return;
         currentHealth -= damage;
+        Debug.Log("player took damage");
         if (currentHealth <= 0)
         {
             GameManager.Instance.GameOver();
@@ -250,8 +252,18 @@ public class PlayerController : MonoBehaviour, IDamageable
         ricochetAmount += 2;
     }
 
+    public void SpreadShotUpgrade()
+    {
+        if (!spreadShot) spreadShot = true;
+    }
+
     private void ShootBullet()
     {
+        if(spreadShot)
+        {
+            ShootSpreadBullet();
+            return;
+        }
         Quaternion bulletRotation = Quaternion.Euler(bulletPrefab.transform.eulerAngles.x, transform.eulerAngles.y, 0f);
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
 
@@ -259,6 +271,21 @@ public class PlayerController : MonoBehaviour, IDamageable
         else bullet.GetComponent<Bullet>().Initialize(currentBulletDamage);
 
         bullet.GetComponent<Rigidbody>().linearVelocity = firePoint.forward * currentBulletSpeed;
+    }
+
+    private void ShootSpreadBullet()
+    {
+        Vector3 offSetPos1 = new Vector3(firePoint.position.x - 0.1f, firePoint.position.y, firePoint.position.z);
+        Vector3 offSetPos2 = new Vector3(firePoint.position.x + 0.1f, firePoint.position.y, firePoint.position.z);
+
+        Quaternion bulletRotationLeft = Quaternion.Euler(bulletPrefab.transform.eulerAngles.x, transform.eulerAngles.y -20f, 0f);
+        Quaternion bulletRotationRight = Quaternion.Euler(bulletPrefab.transform.eulerAngles.x, transform.eulerAngles.y +20f, 0f);
+
+        GameObject bullet1 = Instantiate(bulletPrefab, offSetPos1, bulletRotationLeft);  
+        GameObject bullet2 = Instantiate(bulletPrefab, offSetPos2, bulletRotationRight);
+
+        bullet1.GetComponent<Rigidbody>().linearVelocity = (bulletRotationLeft * Vector3.forward) * currentBulletSpeed;
+        bullet2.GetComponent<Rigidbody>().linearVelocity = (bulletRotationRight * Vector3.forward) * currentBulletSpeed;
     }
 
 }

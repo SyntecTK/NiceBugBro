@@ -19,6 +19,8 @@ public class Bullet : MonoBehaviour
         Vector3 direction = _rigidbody.linearVelocity.normalized;
         float distance = _rigidbody.linearVelocity.magnitude * Time.fixedDeltaTime;
 
+        if(!_ricochet) return;
+
         if (!Physics.Raycast(_rigidbody.position, direction, out RaycastHit hit, distance, LayerMask.GetMask("Ground"))) return;
 
         if (hit.collider.CompareTag("Player") || hit.collider.CompareTag("Enemy"))

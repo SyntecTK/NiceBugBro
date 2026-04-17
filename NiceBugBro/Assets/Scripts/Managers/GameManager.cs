@@ -67,6 +67,7 @@ public class GameManager : MonoBehaviour
         if (upgrade.minimap) PlayerController.Instance.MinimapUpgrade();
         if (upgrade.fiveShot) PlayerController.Instance.BurstShotUpgrade();
         if (upgrade.ricochet) PlayerController.Instance.RicochetUpgrade();
+        if(upgrade.spreadShot) PlayerController.Instance.SpreadShotUpgrade();
 
         ExitUpgradeMode(upgrade);
     }

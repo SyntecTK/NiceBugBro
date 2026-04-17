@@ -21,5 +21,6 @@ public class Upgrade : ScriptableObject
     public bool minimap;
     public bool fiveShot;
     public bool ricochet;
+    public bool spreadShot;
     
 }
