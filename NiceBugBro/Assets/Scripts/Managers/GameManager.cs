@@ -1,4 +1,5 @@
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -9,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     [Header("UI References")]
     [SerializeField] private TMP_Text timeTXT;
+    [SerializeField] private TMP_Text healthTXT;
 
     private void Awake()
     {
@@ -21,6 +23,11 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+    }
+
+    private void FixedUpdate()
+    {
+        UpdateHUD();
     }
 
     public void EnterUpgradeMode()
@@ -57,11 +64,15 @@ public class GameManager : MonoBehaviour
         ExitUpgradeMode(upgrade);
     }
 
-    private void UpdateTimeDisplay()
+    private void UpdateHUD()
     {
+        //Time Display
         float time = Time.timeSinceLevelLoad;
         int minutes = Mathf.FloorToInt(time / 60f);
         int seconds = Mathf.FloorToInt(time % 60f);
         timeTXT.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+        //Health Display
+        healthTXT.text = PlayerController.Instance.CurrentHealth.ToString();
     }
 }

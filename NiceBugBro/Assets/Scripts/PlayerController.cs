@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     [Header("PlayerStats")]
     [SerializeField] private int currentHealth;
+    public int CurrentHealth => currentHealth;
     private int health = 100;
     [SerializeField] private float currentSpeed;
     private float speed = 10;
