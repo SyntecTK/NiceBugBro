@@ -16,7 +16,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable
 
     [Header("Shooting Settings")]
     [SerializeField] private float bulletSpeed = 10f;
-    [SerializeField] private int bulletDamage = 1;
+    [SerializeField] private int bulletDamage = 10;
     [SerializeField] private float shootInterval = 2f;
 
     [Header("Enemy Stats")]
@@ -40,7 +40,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable
     private void Update()
     {
         MoveTowardsPlayer();
-        Hover();
+        //Hover();
         HandleShooting();
     }
 
@@ -50,22 +50,22 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable
 
         Vector3 playerPos = PlayerController.Instance.transform.position;
         Vector3 direction = playerPos - transform.position;
-        direction.y = 0f;
+        //direction.y = 0f;
         direction.Normalize();
 
         transform.position += direction * moveSpeed * Time.deltaTime;
 
-        transform.rotation = Quaternion.LookRotation(direction);
+        transform.LookAt(new Vector3(playerPos.x, transform.position.y, playerPos.z));
     }
 
     private void Hover()
     {
         float bobY = Mathf.Sin(Time.time * bobFrequency + bobOffset) * bobAmplitude;
 
-        Vector3 pos = transform.position;
+        Vector3 pos = transform.localPosition;
         pos.y = hoverHeight + bobY;
 
-        transform.position = pos;
+        transform.localPosition = pos;
     }
 
     private void HandleShooting()
@@ -93,6 +93,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable
         currentHealth -= damage;
         if (currentHealth <= 0)
         {
+            GameManager.Instance.KillEnemy();
             Destroy(gameObject);
         }
     }

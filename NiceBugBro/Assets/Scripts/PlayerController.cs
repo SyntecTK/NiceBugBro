@@ -73,6 +73,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void Update()
     {
+        if(GameManager.Instance.IsMovementLocked) return;
         HandleMovement();
         HandleLook();
         transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
@@ -168,7 +169,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         currentHealth -= damage;
         if (currentHealth <= 0)
         {
-            //TODO: Hier Game Beendung etc.
+            GameManager.Instance.GameOver();
         }
     }
 

@@ -38,7 +38,7 @@ public class Bullet : MonoBehaviour
         _lifeTime = 3f;
         _ricochet = false;
         _ricochetAmount = 0;
-        StartCoroutine(SelfDestroy());
+        //StartCoroutine(SelfDestroy());
     }
 
     public void Initialize(int damage)
@@ -47,7 +47,7 @@ public class Bullet : MonoBehaviour
         _lifeTime = 3f;
         _ricochet = false;
         _ricochetAmount = 0;
-        StartCoroutine(SelfDestroy());
+        //StartCoroutine(SelfDestroy());
     }
 
     public void Initialize(int damage, float lifeTime, bool ricochet, int ricochetAmount)
@@ -56,7 +56,7 @@ public class Bullet : MonoBehaviour
         _lifeTime = lifeTime;
         _ricochet = ricochet;
         _ricochetAmount = ricochetAmount;
-        StartCoroutine(SelfDestroy());
+        //StartCoroutine(SelfDestroy());
     }
 
     private IEnumerator SelfDestroy()

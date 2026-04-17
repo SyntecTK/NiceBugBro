@@ -9,13 +9,17 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private List<GameObject> spawnPoints;
 
     [Header("Spawn Settings")]
-    [SerializeField] private float minSpawnTime = 5f;
-    [SerializeField] private float maxSpawnTime = 10f;
+    [SerializeField] private float minSpawnTime = 2f;
+    [SerializeField] private float maxSpawnTime = 4f;
     private float spawnTimer;
 
     private void Start()
     {
         ResetTimer();
+        for(int i = 7; i > 0; i--)
+        {
+            SpawnEnemy();
+        }
     }
 
     private void Update()

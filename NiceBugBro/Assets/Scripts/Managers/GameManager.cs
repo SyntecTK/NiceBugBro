@@ -7,11 +7,16 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [SerializeField] private GameObject _upgradeScreen;
+    [SerializeField] private GameObject _gameOverScreen;
 
     [Header("UI References")]
     [SerializeField] private TMP_Text timeTXT;
     [SerializeField] private TMP_Text healthTXT;
+    [SerializeField] private TMP_Text killsTXT;
 
+    private int killCount;
+    private bool isMovementLocked;
+    public bool IsMovementLocked => isMovementLocked;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -23,6 +28,8 @@ public class GameManager : MonoBehaviour
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+
+        killCount = 0;
     }
 
     private void FixedUpdate()
@@ -74,5 +81,20 @@ public class GameManager : MonoBehaviour
 
         //Health Display
         healthTXT.text = PlayerController.Instance.CurrentHealth.ToString();
+    }
+
+    public void GameOver()
+    {
+        Time.timeScale = 0f;
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        _gameOverScreen.SetActive(true);
+        isMovementLocked = true;
+    }
+
+    public void KillEnemy()
+    {
+        killCount++;
+        killsTXT.text = killCount.ToString();
     }
 }
