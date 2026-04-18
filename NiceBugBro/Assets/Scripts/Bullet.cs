@@ -90,7 +90,7 @@ public class Bullet : MonoBehaviour
         {
             other.gameObject.GetComponent<IDamageable>().TakeDamage(_damage);
         }
-        if(!_ricochet) DestroyBullet();
+        if(!other.gameObject.CompareTag("Bullet") && !_ricochet) DestroyBullet();
 
         // if (!other.gameObject.CompareTag("Player") && !other.gameObject.CompareTag("Enemy"))
         // {
