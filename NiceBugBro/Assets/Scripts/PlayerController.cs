@@ -249,8 +249,8 @@ public class PlayerController : MonoBehaviour, IDamageable
     public void UpgradeBulletSize(float amount)
     {
         currentBulletSize += amount;
-        float firePointParentPlus = amount / 2;
-        firePointParent.localPosition = new Vector3(firePointParent.localPosition.x + firePointParentPlus, firePointParent.localPosition.y, firePointParent.localPosition.z);
+       // float firePointParentPlus = amount / 2;
+        firePointParent.localPosition = new Vector3(firePointParent.localPosition.x + amount, firePointParent.localPosition.y, firePointParent.localPosition.z);
     }
 
     public void UpgradeHealth(int amount)
