@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f745e3ddfae3024f93fe9a40614cd49, type: 3}
+  m_Name: CaliberUpgrade
+  m_EditorClassIdentifier: Assembly-CSharp::Upgrade
+  upgradeName: Caliber 9000
+  description: Smash Enemies with these Bad Boys
+  unique: 0
+  playerSpeedUpgrade: 0
+  playerLookSensitivityUpgrade: 0
+  bulletSpeedUpgrade: 0
+  bulletDamageUpgrade: 0
+  bulletSizeUpgrade: 1
+  healthUpgrade: 0
+  jumpUpgrade: 0
+  gravityUpgrade: 0
+  minimap: 0
+  fiveShot: 0
+  ricochet: 0
+  spreadShot: 0
+  bulletSize: 1

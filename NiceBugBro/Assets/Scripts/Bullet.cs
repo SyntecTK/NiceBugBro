@@ -7,7 +7,6 @@ using UnityEngine.Serialization;
 public class Bullet : MonoBehaviour
 {
     private int _damage;
-    private float _lifeTime;
     private bool _ricochet;
     private int _ricochetAmount;
     [SerializeField] private Rigidbody _rigidbody;
@@ -39,33 +38,49 @@ public class Bullet : MonoBehaviour
     public void Initialize()
     {
         _damage = 10;
-        _lifeTime = 3f;
         _ricochet = false;
         _ricochetAmount = 0;
-        //StartCoroutine(SelfDestroy());
+        BulletParent.Instance.AddBullet(gameObject);
     }
 
     public void Initialize(int damage)
     {
         _damage = damage;
-        _lifeTime = 3f;
         _ricochet = false;
         _ricochetAmount = 0;
-        //StartCoroutine(SelfDestroy());
+        BulletParent.Instance.AddBullet(gameObject);
     }
 
-    public void Initialize(int damage, float lifeTime, bool ricochet, int ricochetAmount)
+    public void Initialize(int damage, float size)
     {
         _damage = damage;
-        _lifeTime = lifeTime;
+        _ricochet = false;
+        _ricochetAmount = 0;
+        transform.localScale = new Vector3(size, size, size);
+        BulletParent.Instance.AddBullet(gameObject);
+    }
+
+    public void Initialize(int damage, bool ricochet, int ricochetAmount)
+    {
+        _damage = damage;
         _ricochet = ricochet;
         _ricochetAmount = ricochetAmount;
-        //StartCoroutine(SelfDestroy());
+        BulletParent.Instance.AddBullet(this.gameObject);
+    }
+
+    public void Initialize(int damage, bool ricochet, int ricochetAmount, float size)
+    {
+        _damage = damage;
+        _ricochet = ricochet;
+        _ricochetAmount = ricochetAmount;
+        transform.localScale = new Vector3(size, size, size);
+        BulletParent.Instance.AddBullet(this.gameObject);
     }
 
     private IEnumerator SelfDestroy()
     {
-        yield return new WaitForSeconds(_lifeTime);
+        //yield return new WaitForSeconds(_lifeTime);
+        yield return null;
         DestroyBullet();
     }
 

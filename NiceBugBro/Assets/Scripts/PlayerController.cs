@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     [SerializeField] private Transform firePoint;
     [SerializeField] private Transform firePointLeft;
     [SerializeField] private Transform firePointRight;
+    [SerializeField] private Transform firePointParent;
     [SerializeField] private Transform raycastPoint;
 
     [SerializeField] private GameObject bulletPrefab;
@@ -40,12 +41,15 @@ public class PlayerController : MonoBehaviour, IDamageable
     private float bulletSpeed = 50;
     [SerializeField] private float currentBulletLifeTime;
     private float bulletLifeTime = 3f;
+    [SerializeField] private float currentBulletSize;
+    private float bulletSize = 0.1f;
 
     [Header("GamePlay Changes")]
     [SerializeField] private bool minimap;
     [SerializeField] private bool burstShot;
     [SerializeField] private bool spreadShot;
     [SerializeField] private bool ricochet;
+    [SerializeField] private bool bulletSizeChanged;
 
     private int ricochetAmount;
     private int burstShotAmount;
@@ -205,7 +209,8 @@ public class PlayerController : MonoBehaviour, IDamageable
         currentBulletLifeTime = bulletLifeTime;
         currentMass = mass;
         rb.mass = currentMass;
-        currentGravity = gravity;   
+        currentGravity = gravity;
+        currentBulletSize = bulletSize;
 
         //TODO: Hier resets für die FuckeryAbilities
         burstShot = false;
@@ -214,6 +219,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         minimap = false;
         ricochet = false;
         ricochetAmount = 0;
+        bulletSizeChanged = false;
     }
 
     public void UpgradePlayerSpeed(int amount)
@@ -238,6 +244,13 @@ public class PlayerController : MonoBehaviour, IDamageable
     public void UpgradeBulletLifeTime(float amount)
     {
         currentBulletLifeTime += amount;
+    }
+    
+    public void UpgradeBulletSize(float amount)
+    {
+        currentBulletSize += amount;
+        float firePointParentPlus = amount / 2;
+        firePointParent.localPosition = new Vector3(firePointParent.localPosition.x + firePointParentPlus, firePointParent.localPosition.y, firePointParent.localPosition.z);
     }
 
     public void UpgradeHealth(int amount)
@@ -277,6 +290,11 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         if (!spreadShot) spreadShot = true;
     }
+    
+    public void BulletSizeChangedUpgrade()
+    {
+        if (!bulletSizeChanged) bulletSizeChanged = true;
+    }
 
     private void ShootBullet()
     {
@@ -288,8 +306,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         Quaternion bulletRotation = Quaternion.Euler(bulletPrefab.transform.eulerAngles.x, transform.eulerAngles.y, 0f);
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
 
-        if (ricochet) bullet.GetComponent<Bullet>().Initialize(currentBulletDamage, currentBulletLifeTime, ricochet, ricochetAmount);
-        else bullet.GetComponent<Bullet>().Initialize(currentBulletDamage);
+        InitializeBullet(bullet);
 
         bullet.GetComponent<Rigidbody>().linearVelocity = firePoint.forward * currentBulletSpeed;
     }
@@ -301,19 +318,31 @@ public class PlayerController : MonoBehaviour, IDamageable
         GameObject leftBullet = Instantiate(bulletPrefab, firePointLeft.position, bulletRotation);
         GameObject rightBullet = Instantiate(bulletPrefab, firePointRight.position, bulletRotation);
 
-        if (ricochet)
-        {
-            leftBullet.GetComponent<Bullet>().Initialize(currentBulletDamage, currentBulletLifeTime, ricochet, ricochetAmount);
-            rightBullet.GetComponent<Bullet>().Initialize(currentBulletDamage, currentBulletLifeTime, ricochet, ricochetAmount);
-        }
-        else
-        {
-            leftBullet.GetComponent<Bullet>().Initialize(currentBulletDamage);
-            rightBullet.GetComponent<Bullet>().Initialize(currentBulletDamage);
-        }
+        InitializeBullet(leftBullet);
+        InitializeBullet(rightBullet);
 
         leftBullet.GetComponent<Rigidbody>().linearVelocity = firePointLeft.forward * currentBulletSpeed;
         rightBullet.GetComponent<Rigidbody>().linearVelocity = firePointRight.forward * currentBulletSpeed;
+    }
+
+    private void InitializeBullet(GameObject bullet)
+    {
+        if (!ricochet && !bulletSizeChanged)
+        {
+            bullet.GetComponent<Bullet>().Initialize(currentBulletDamage);
+        }
+        else if (bulletSizeChanged && !ricochet)
+        {
+            bullet.GetComponent<Bullet>().Initialize(currentBulletDamage, currentBulletSize);
+        }
+        else if (!bulletSizeChanged && ricochet)
+        {
+            bullet.GetComponent<Bullet>().Initialize(currentBulletDamage, true, ricochetAmount);
+        }
+        else
+        {
+            bullet.GetComponent<Bullet>().Initialize(currentBulletDamage, true, ricochetAmount, currentBulletSize);
+        }
     }
 
 }

@@ -15,7 +15,8 @@ public class Upgrade : ScriptableObject
     public float playerLookSensitivityUpgrade;
     public int bulletSpeedUpgrade;
     public int bulletDamageUpgrade;
-    public float bulletLifeTimeUpgrade;
+    //public float bulletLifeTimeUpgrade;
+    public float bulletSizeUpgrade;
     public int healthUpgrade;
     public int jumpUpgrade;
     public float gravityUpgrade;
@@ -25,5 +26,6 @@ public class Upgrade : ScriptableObject
     public bool fiveShot;
     public bool ricochet;
     public bool spreadShot;
+    public bool bulletSize;
     
 }
