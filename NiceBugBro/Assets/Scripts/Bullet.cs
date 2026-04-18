@@ -14,14 +14,16 @@ public class Bullet : MonoBehaviour
 
     private void FixedUpdate()
     {
+        OutOfBoundsCheck();
         if (_rigidbody.linearVelocity.sqrMagnitude < 0.0001f) return;
 
         Vector3 direction = _rigidbody.linearVelocity.normalized;
         float distance = _rigidbody.linearVelocity.magnitude * Time.fixedDeltaTime;
 
-        if(!_ricochet) return;
+        if (!_ricochet) return;
 
-        if (!Physics.Raycast(_rigidbody.position, direction, out RaycastHit hit, distance, LayerMask.GetMask("Ground"))) return;
+        if (!Physics.Raycast(_rigidbody.position, direction, out RaycastHit hit, distance,
+                LayerMask.GetMask("Ground"))) return;
 
         if (hit.collider.CompareTag("Player") || hit.collider.CompareTag("Enemy"))
         {
@@ -75,7 +77,7 @@ public class Bullet : MonoBehaviour
             DestroyBullet();
             return;
         }
-        
+
         // if (!other.gameObject.CompareTag("Player") && !other.gameObject.CompareTag("Enemy"))
         // {
         //     Ricochet(other);
@@ -114,5 +116,11 @@ public class Bullet : MonoBehaviour
     private void DestroyBullet()
     {
         Destroy(gameObject);
+    }
+
+    private void OutOfBoundsCheck()
+    {
+        if (transform.position.x < -130 || transform.position.x > 130 || transform.position.z < -130 ||
+            transform.position.z > 130 || transform.position.y < -100 || transform.position.y > 150) DestroyBullet();
     }
 }
