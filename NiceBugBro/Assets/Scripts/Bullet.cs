@@ -10,31 +10,6 @@ public class Bullet : MonoBehaviour
     private bool _ricochet;
     private int _ricochetAmount;
     [SerializeField] private Rigidbody _rigidbody;
-
-    private void FixedUpdate()
-    {
-        OutOfBoundsCheck();
-        if (_rigidbody.linearVelocity.sqrMagnitude < 0.0001f) return;
-
-        Vector3 direction = _rigidbody.linearVelocity.normalized;
-        float distance = _rigidbody.linearVelocity.magnitude * Time.fixedDeltaTime;
-
-        if (!_ricochet) return;
-
-        if (!Physics.Raycast(_rigidbody.position, direction, out RaycastHit hit, distance,
-                LayerMask.GetMask("Ground"))) return;
-
-        if (hit.collider.CompareTag("Player") || hit.collider.CompareTag("Enemy"))
-        {
-            hit.collider.GetComponent<IDamageable>()?.TakeDamage(_damage);
-            DestroyBullet();
-            return;
-        }
-
-        Ricochet(hit.normal, hit.point);
-    }
-
-
     public void Initialize()
     {
         _damage = 10;
@@ -76,6 +51,31 @@ public class Bullet : MonoBehaviour
         transform.localScale = new Vector3(size, size, size);
         BulletParent.Instance.AddBullet(this.gameObject);
     }
+    private void FixedUpdate()
+    {
+        OutOfBoundsCheck();
+        if (_rigidbody.linearVelocity.sqrMagnitude < 0.0001f) return;
+
+        Vector3 direction = _rigidbody.linearVelocity.normalized;
+        float distance = _rigidbody.linearVelocity.magnitude * Time.fixedDeltaTime;
+
+        if (!_ricochet) return;
+
+        if (!Physics.Raycast(_rigidbody.position, direction, out RaycastHit hit, distance,
+                LayerMask.GetMask("Ground"))) return;
+
+        if (hit.collider.CompareTag("Player") || hit.collider.CompareTag("Enemy"))
+        {
+            hit.collider.GetComponent<IDamageable>()?.TakeDamage(_damage);
+            DestroyBullet();
+            return;
+        }
+
+        Ricochet(hit.normal, hit.point);
+    }
+
+
+    
 
     private IEnumerator SelfDestroy()
     {
@@ -89,9 +89,8 @@ public class Bullet : MonoBehaviour
         if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Enemy"))
         {
             other.gameObject.GetComponent<IDamageable>().TakeDamage(_damage);
-            DestroyBullet();
-            return;
         }
+        if(!_ricochet) DestroyBullet();
 
         // if (!other.gameObject.CompareTag("Player") && !other.gameObject.CompareTag("Enemy"))
         // {
