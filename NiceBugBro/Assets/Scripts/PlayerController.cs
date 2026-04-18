@@ -14,9 +14,12 @@ public class PlayerController : MonoBehaviour, IDamageable
     private float speed = 10;
     [SerializeField] private float currentJumpForce;
     private float jumpForce = 15;
+    [SerializeField] private float currentMass;
+    private float mass = 2;
     [SerializeField] private float minPitch;
     [SerializeField] private float maxPitch;
-    [SerializeField] private float lookSensitivity;
+    private float lookSensitivity = 0.15f;
+    [SerializeField] private float currentLookSensitivity;
 
     private Vector2 moveInput;
     private Vector2 lookInput;
@@ -51,6 +54,8 @@ public class PlayerController : MonoBehaviour, IDamageable
     [SerializeField] private bool isGrounded;
 
     private Rigidbody rb;
+    private float gravity = -5f;
+    [SerializeField] private float currentGravity;  
 
     private void Start()
     {
@@ -68,9 +73,8 @@ public class PlayerController : MonoBehaviour, IDamageable
         Cursor.visible = false;
 
         //TODO: Check obs OnLoad resettet wird
-        InitializePlayer();
-
         rb = GetComponent<Rigidbody>();
+        InitializePlayer();
     }
 
     private void Update()
@@ -104,12 +108,15 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             transform.Translate(movement.normalized * (currentSpeed * 2) * Time.deltaTime, Space.World);
         }
+        
+        rb.AddForce(transform.up * currentGravity, ForceMode.Force);
+        
     }
 
     private void HandleLook()
     {
         transform.Rotate(0f, lookInput.x * lookSensitivity, 0f, Space.World);
-        pitch -= lookInput.y * lookSensitivity;
+        pitch -= lookInput.y * currentLookSensitivity;
         pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
 
         Camera.main.transform.localRotation = Quaternion.Euler(pitch, 0f, 0f);
@@ -193,8 +200,12 @@ public class PlayerController : MonoBehaviour, IDamageable
         currentBulletDamage = bulletDamage;
         currentJumpForce = jumpForce;
         currentSpeed = speed;
+        currentLookSensitivity = lookSensitivity;
         currentBulletSpeed = bulletSpeed;
         currentBulletLifeTime = bulletLifeTime;
+        currentMass = mass;
+        rb.mass = currentMass;
+        currentGravity = gravity;   
 
         //TODO: Hier resets für die FuckeryAbilities
         burstShot = false;
@@ -207,12 +218,17 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     public void UpgradePlayerSpeed(int amount)
     {
-        currentSpeed = speed;
+        currentSpeed += amount;
+    }
+    
+    public void UpgradePlayerLookSensitivity(float amount)
+    {
+        currentLookSensitivity += amount;
     }
 
     public void UpgradeBulletSpeed(int amount)
     {
-        currentBulletSpeed = bulletSpeed;
+        currentBulletSpeed += amount;
     }
 
     public void UpgradeBulletDamage(int amount)
@@ -232,6 +248,10 @@ public class PlayerController : MonoBehaviour, IDamageable
     public void UpgradeJump(int amount)
     {
         currentJumpForce += amount;
+    }
+    public void UpgradeGravity(float amount)
+    {
+        currentGravity -= amount;
     }
 
     public void MinimapUpgrade()
@@ -280,7 +300,17 @@ public class PlayerController : MonoBehaviour, IDamageable
         Quaternion bulletRotation = Quaternion.Euler(bulletPrefab.transform.eulerAngles.x, transform.eulerAngles.y, 0f);
         GameObject leftBullet = Instantiate(bulletPrefab, firePointLeft.position, bulletRotation);
         GameObject rightBullet = Instantiate(bulletPrefab, firePointRight.position, bulletRotation);
-        
+
+        if (ricochet)
+        {
+            leftBullet.GetComponent<Bullet>().Initialize(currentBulletDamage, currentBulletLifeTime, ricochet, ricochetAmount);
+            rightBullet.GetComponent<Bullet>().Initialize(currentBulletDamage, currentBulletLifeTime, ricochet, ricochetAmount);
+        }
+        else
+        {
+            leftBullet.GetComponent<Bullet>().Initialize(currentBulletDamage);
+            rightBullet.GetComponent<Bullet>().Initialize(currentBulletDamage);
+        }
 
         leftBullet.GetComponent<Rigidbody>().linearVelocity = firePointLeft.forward * currentBulletSpeed;
         rightBullet.GetComponent<Rigidbody>().linearVelocity = firePointRight.forward * currentBulletSpeed;
