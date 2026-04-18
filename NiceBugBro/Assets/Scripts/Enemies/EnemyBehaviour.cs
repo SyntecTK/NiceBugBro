@@ -86,6 +86,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.LookRotation(direction));
         bullet.GetComponent<Bullet>().Initialize(bulletDamage);
         bullet.GetComponent<Rigidbody>().linearVelocity = direction * bulletSpeed;
+        AudioManager.Instance.Play3DSound(SoundType.EnemyShot, transform.position);
     }
 
     public void TakeDamage(int damage)
@@ -93,6 +94,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable
         currentHealth -= damage;
         if (currentHealth <= 0)
         {
+            AudioManager.Instance.Play3DSound(SoundType.EnemyKill, transform.position);
             GameManager.Instance.KillEnemy();
             Destroy(gameObject);
         }

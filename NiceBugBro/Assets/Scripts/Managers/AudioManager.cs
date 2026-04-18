@@ -22,6 +22,11 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private SoundGroup[] soundGroups;
     [SerializeField] private AudioSource globalAudioSource;
 
+    [Header("3D Sound Settings")]
+    [SerializeField] private AudioRolloffMode rolloffMode = AudioRolloffMode.Linear;
+    [SerializeField] private float minDistance3D = 2f;
+    [SerializeField] private float maxDistance3D = 20f;
+
     private Dictionary<SoundType, SoundGroup> soundDictionary;
 
     private void Awake()
@@ -85,9 +90,9 @@ public class AudioManager : MonoBehaviour
             source.pitch = Random.Range(group.minPitch, group.maxPitch);
             
             source.spatialBlend = 1f; 
-            source.rolloffMode = AudioRolloffMode.Linear;
-            source.minDistance = 2f;
-            source.maxDistance = 20f;
+            source.rolloffMode = rolloffMode;
+            source.minDistance = minDistance3D;
+            source.maxDistance = maxDistance3D;
 
             source.Play();
 

@@ -43,6 +43,7 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         _upgradeScreen.SetActive(true);
+        AudioManager.Instance.Play2DSound(SoundType.PowerUp);
     }
 
     public void ExitUpgradeMode(Upgrade upgrade)

@@ -125,6 +125,7 @@ public class Bullet : MonoBehaviour
         _rigidbody.position = point + normal * 0.01f;
         _rigidbody.linearVelocity = reflectedDirection * speed;
         _ricochetAmount--;
+        AudioManager.Instance.Play3DSound(SoundType.Ricochete, transform.position);
     }
 
     private void DestroyBullet()

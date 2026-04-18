@@ -57,6 +57,10 @@ public class PlayerController : MonoBehaviour, IDamageable
     private bool isJumping;
     [SerializeField] private bool isGrounded;
 
+    [Header("Audio")]
+    [SerializeField] private float baseFootstepInterval = 0.4f;
+    private float footstepTimer;
+
     private Rigidbody rb;
     private float gravity = -5f;
     [SerializeField] private float currentGravity;  
@@ -104,6 +108,9 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         Vector3 movement = transform.right * moveInput.x + transform.forward * moveInput.y;
         movement.y = 0f;
+        
+        bool isMoving = movement.sqrMagnitude > 0.01f;
+
         if (!isGrounded)
         {
             transform.Translate(movement.normalized * currentSpeed * Time.deltaTime, Space.World);
@@ -111,10 +118,27 @@ public class PlayerController : MonoBehaviour, IDamageable
         else
         {
             transform.Translate(movement.normalized * (currentSpeed * 2) * Time.deltaTime, Space.World);
+            
+            if (isMoving)
+            {
+                footstepTimer -= Time.deltaTime;
+                if (footstepTimer <= 0f)
+                {
+                    AudioManager.Instance.Play2DSound(SoundType.Footstep);
+                    float speedMultiplier = (currentSpeed * 2) / (speed * 2);
+                    footstepTimer = baseFootstepInterval / Mathf.Max(speedMultiplier, 0.1f);
+                }
+            }
+            else
+            {
+                if (footstepTimer > 0f)
+                {
+                    footstepTimer -= Time.deltaTime;
+                }
+            }
         }
         
         rb.AddForce(transform.up * currentGravity, ForceMode.Force);
-        
     }
 
     private void HandleLook()
@@ -136,6 +160,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
         rb.AddForce(Vector3.up * currentJumpForce, ForceMode.Impulse);
         StartCoroutine(JumpTimer());
+        AudioManager.Instance.Play2DSound(SoundType.Jump);
     }
 
     //---------------------------------- InputActions ----------------------------------
@@ -149,7 +174,11 @@ public class PlayerController : MonoBehaviour, IDamageable
                 StartCoroutine(BurstShotStart(burstShotCounter));
                 burstShotCounter = 0;
             }
-            return;
+            else
+            {
+                AudioManager.Instance.Play2DSound(SoundType.DryFire);   
+            }
+                return;
         }
 
         ShootBullet();
@@ -181,9 +210,11 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (damage < 0) return;
         currentHealth -= damage;
         Debug.Log("player took damage");
+        AudioManager.Instance.Play2DSound(SoundType.PlayerDamageTaken);
         if (currentHealth <= 0)
         {
             GameManager.Instance.GameOver();
+            AudioManager.Instance.Play2DSound(SoundType.GameOver);  
         }
     }
 
@@ -196,7 +227,6 @@ public class PlayerController : MonoBehaviour, IDamageable
             yield return new WaitForSeconds(0.02f);
         }
     }
-
 
     private void InitializePlayer()
     {
@@ -307,6 +337,8 @@ public class PlayerController : MonoBehaviour, IDamageable
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, bulletRotation);
 
         InitializeBullet(bullet);
+
+        AudioManager.Instance.Play2DSound(SoundType.GunShot);
 
         bullet.GetComponent<Rigidbody>().linearVelocity = firePoint.forward * currentBulletSpeed;
     }
