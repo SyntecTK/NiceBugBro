@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SpreadShotUpgrade
   m_EditorClassIdentifier: Assembly-CSharp::Upgrade
   upgradeName: Spreadshot
-  description: Shoot two bllets at once
+  description: Shoot two bullets at once
   unique: 1
   playerSpeedUpgrade: 0
   bulletSpeedUpgrade: 0
