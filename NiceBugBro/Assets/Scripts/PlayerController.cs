@@ -23,8 +23,9 @@ public class PlayerController : MonoBehaviour, IDamageable
     private float pitch;
 
     [Header("References")]
-    [SerializeField]
-    private Transform firePoint;
+    [SerializeField] private Transform firePoint;
+    [SerializeField] private Transform firePointLeft;
+    [SerializeField] private Transform firePointRight;
     [SerializeField] private Transform raycastPoint;
 
     [SerializeField] private GameObject bulletPrefab;
@@ -275,17 +276,14 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void ShootSpreadBullet()
     {
-        Vector3 offSetPos1 = new Vector3(firePoint.position.x - 0.1f, firePoint.position.y, firePoint.position.z);
-        Vector3 offSetPos2 = new Vector3(firePoint.position.x + 0.1f, firePoint.position.y, firePoint.position.z);
+        
+        Quaternion bulletRotation = Quaternion.Euler(bulletPrefab.transform.eulerAngles.x, transform.eulerAngles.y, 0f);
+        GameObject leftBullet = Instantiate(bulletPrefab, firePointLeft.position, bulletRotation);
+        GameObject rightBullet = Instantiate(bulletPrefab, firePointRight.position, bulletRotation);
+        
 
-        Quaternion bulletRotationLeft = Quaternion.Euler(bulletPrefab.transform.eulerAngles.x, transform.eulerAngles.y -20f, 0f);
-        Quaternion bulletRotationRight = Quaternion.Euler(bulletPrefab.transform.eulerAngles.x, transform.eulerAngles.y +20f, 0f);
-
-        GameObject bullet1 = Instantiate(bulletPrefab, offSetPos1, bulletRotationLeft);  
-        GameObject bullet2 = Instantiate(bulletPrefab, offSetPos2, bulletRotationRight);
-
-        bullet1.GetComponent<Rigidbody>().linearVelocity = (bulletRotationLeft * Vector3.forward) * currentBulletSpeed;
-        bullet2.GetComponent<Rigidbody>().linearVelocity = (bulletRotationRight * Vector3.forward) * currentBulletSpeed;
+        leftBullet.GetComponent<Rigidbody>().linearVelocity = firePointLeft.forward * currentBulletSpeed;
+        rightBullet.GetComponent<Rigidbody>().linearVelocity = firePointRight.forward * currentBulletSpeed;
     }
 
 }
