@@ -227,6 +227,7 @@ MonoBehaviour:
   _upgrade: {fileID: 0}
   title: {fileID: 890047438754257885}
   description: {fileID: 3081843095624747500}
+  alienDescription: {fileID: 7624507417185939778}
 --- !u!1 &6793914794283059267
 GameObject:
   m_ObjectHideFlags: 0

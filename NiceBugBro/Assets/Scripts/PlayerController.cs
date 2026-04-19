@@ -4,8 +4,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour, IDamageable
 {
-    public static PlayerController Instance { get; private set; }
-
     [Header("PlayerStats")]
     [SerializeField] private int currentHealth;
     public int CurrentHealth => currentHealth;
@@ -24,6 +22,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     private Vector2 moveInput;
     private Vector2 lookInput;
     private float pitch;
+    private Vector3 startPos;
 
     [Header("References")]
     [SerializeField] private Transform firePoint;
@@ -63,20 +62,10 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private Rigidbody rb;
     private float gravity = -5f;
-    [SerializeField] private float currentGravity;  
+    [SerializeField] private float currentGravity;
 
     private void Start()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
@@ -87,7 +76,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void Update()
     {
-        if(GameManager.Instance.IsMovementLocked) return;
+        if (GameManager.Instance.IsMovementLocked) return;
         HandleMovement();
         HandleLook();
         transform.rotation = Quaternion.Euler(0f, transform.rotation.eulerAngles.y, 0f);
@@ -108,7 +97,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         Vector3 movement = transform.right * moveInput.x + transform.forward * moveInput.y;
         movement.y = 0f;
-        
+
         bool isMoving = movement.sqrMagnitude > 0.01f;
 
         if (!isGrounded)
@@ -118,7 +107,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         else
         {
             transform.Translate(movement.normalized * (currentSpeed * 2) * Time.deltaTime, Space.World);
-            
+
             if (isMoving)
             {
                 footstepTimer -= Time.deltaTime;
@@ -137,7 +126,7 @@ public class PlayerController : MonoBehaviour, IDamageable
                 }
             }
         }
-        
+
         rb.AddForce(transform.up * currentGravity, ForceMode.Force);
     }
 
@@ -176,9 +165,9 @@ public class PlayerController : MonoBehaviour, IDamageable
             }
             else
             {
-                AudioManager.Instance.Play2DSound(SoundType.DryFire);   
+                AudioManager.Instance.Play2DSound(SoundType.DryFire);
             }
-                return;
+            return;
         }
 
         ShootBullet();
@@ -214,7 +203,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         if (currentHealth <= 0)
         {
             GameManager.Instance.GameOver();
-            AudioManager.Instance.Play2DSound(SoundType.GameOver);  
+            AudioManager.Instance.Play2DSound(SoundType.GameOver);
         }
     }
 
@@ -228,7 +217,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         }
     }
 
-    private void InitializePlayer()
+    public void InitializePlayer()
     {
         currentHealth = health;
         currentBulletDamage = bulletDamage;
@@ -241,6 +230,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         rb.mass = currentMass;
         currentGravity = gravity;
         currentBulletSize = bulletSize;
+        startPos = transform.position;
 
         //TODO: Hier resets für die FuckeryAbilities
         burstShot = false;
@@ -250,13 +240,18 @@ public class PlayerController : MonoBehaviour, IDamageable
         ricochet = false;
         ricochetAmount = 0;
         bulletSizeChanged = false;
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.UpdateHUD();
+        }
     }
 
     public void UpgradePlayerSpeed(int amount)
     {
         currentSpeed += amount;
     }
-    
+
     public void UpgradePlayerLookSensitivity(float amount)
     {
         currentLookSensitivity += amount;
@@ -275,12 +270,12 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         currentBulletLifeTime += amount;
     }
-    
+
     public void UpgradeBulletSize(float amount)
     {
         currentBulletSize += amount;
-       // float firePointParentPlus = amount / 2;
-        firePointParent.localPosition = new Vector3(firePointParent.localPosition.x + amount, firePointParent.localPosition.y, firePointParent.localPosition.z);
+        // float firePointParentPlus = amount / 2;
+        firePointParent.localPosition = new Vector3(firePointParent.localPosition.x + amount * 2f, firePointParent.localPosition.y, firePointParent.localPosition.z);
     }
 
     public void UpgradeHealth(int amount)
@@ -320,7 +315,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     {
         if (!spreadShot) spreadShot = true;
     }
-    
+
     public void BulletSizeChangedUpgrade()
     {
         if (!bulletSizeChanged) bulletSizeChanged = true;
@@ -328,7 +323,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void ShootBullet()
     {
-        if(spreadShot)
+        if (spreadShot)
         {
             ShootSpreadBullet();
             return;
@@ -345,7 +340,7 @@ public class PlayerController : MonoBehaviour, IDamageable
 
     private void ShootSpreadBullet()
     {
-        
+
         Quaternion bulletRotation = Quaternion.Euler(bulletPrefab.transform.eulerAngles.x, transform.eulerAngles.y, 0f);
         GameObject leftBullet = Instantiate(bulletPrefab, firePointLeft.position, bulletRotation);
         GameObject rightBullet = Instantiate(bulletPrefab, firePointRight.position, bulletRotation);
@@ -375,6 +370,30 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             bullet.GetComponent<Bullet>().Initialize(currentBulletDamage, true, ricochetAmount, currentBulletSize);
         }
+    }
+
+    //----------------------------------------------------------------------------------------------------------------------------
+
+    public void UpgradeChosen(Upgrade upgrade)
+    {
+        //TODO: Hier upgrade anwenden auf player
+        if (upgrade.playerSpeedUpgrade != 0) UpgradePlayerSpeed(upgrade.playerSpeedUpgrade);
+        if (upgrade.playerLookSensitivityUpgrade != 0) UpgradePlayerLookSensitivity(upgrade.playerLookSensitivityUpgrade);
+        if (upgrade.bulletSpeedUpgrade != 0) UpgradeBulletSpeed(upgrade.bulletSpeedUpgrade);
+        if (upgrade.bulletDamageUpgrade != 0) UpgradeBulletDamage(upgrade.bulletDamageUpgrade);
+        //if (upgrade.bulletLifeTimeUpgrade != 0) UpgradeBulletLifeTime(upgrade.bulletLifeTimeUpgrade);
+        if (upgrade.healthUpgrade != 0) UpgradeHealth(upgrade.healthUpgrade);
+        if (upgrade.jumpUpgrade != 0) UpgradeJump(upgrade.jumpUpgrade);
+        if (upgrade.gravityUpgrade != 0) UpgradeGravity(upgrade.gravityUpgrade);
+        if (upgrade.bulletSizeUpgrade != 0) UpgradeBulletSize(upgrade.bulletSizeUpgrade);
+
+        if (upgrade.minimap) MinimapUpgrade();
+        if (upgrade.fiveShot) BurstShotUpgrade();
+        if (upgrade.ricochet) RicochetUpgrade();
+        if (upgrade.spreadShot) SpreadShotUpgrade();
+        if (upgrade.bulletSize) BulletSizeChangedUpgrade();
+
+        //ExitUpgradeMode(upgrade);
     }
 
 }

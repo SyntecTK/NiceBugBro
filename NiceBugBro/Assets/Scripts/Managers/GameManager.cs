@@ -1,6 +1,6 @@
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -14,6 +14,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text healthTXT;
     [SerializeField] private TMP_Text killsTXT;
 
+    [SerializeField] private TMP_Text endGameKillsTXT;
+    [SerializeField] private TMP_Text endGameTimeTXT;
+
+    private PlayerController player;
+
+    private string currentTime;
+
     private int killCount;
     private bool isMovementLocked;
     public bool IsMovementLocked => isMovementLocked;
@@ -26,10 +33,14 @@ public class GameManager : MonoBehaviour
         else
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
 
         killCount = 0;
+    }
+
+    private void Start()
+    {
+        player = FindFirstObjectByType<PlayerController>();
     }
 
     private void FixedUpdate()
@@ -55,38 +66,20 @@ public class GameManager : MonoBehaviour
         _upgradeScreen.SetActive(false);
     }
 
-    public void UpgradeChosen(Upgrade upgrade)
-    {
-        //TODO: Hier upgrade anwenden auf player
-        if (upgrade.playerSpeedUpgrade != 0) PlayerController.Instance.UpgradePlayerSpeed(upgrade.playerSpeedUpgrade);
-		if (upgrade.playerLookSensitivityUpgrade != 0) PlayerController.Instance.UpgradePlayerLookSensitivity(upgrade.playerLookSensitivityUpgrade);
-        if (upgrade.bulletSpeedUpgrade != 0) PlayerController.Instance.UpgradeBulletSpeed(upgrade.bulletSpeedUpgrade);
-        if (upgrade.bulletDamageUpgrade != 0) PlayerController.Instance.UpgradeBulletDamage(upgrade.bulletDamageUpgrade);
-        //if (upgrade.bulletLifeTimeUpgrade != 0) PlayerController.Instance.UpgradeBulletLifeTime(upgrade.bulletLifeTimeUpgrade);
-        if (upgrade.healthUpgrade != 0) PlayerController.Instance.UpgradeHealth(upgrade.healthUpgrade);
-        if (upgrade.jumpUpgrade != 0) PlayerController.Instance.UpgradeJump(upgrade.jumpUpgrade);
-        if (upgrade.gravityUpgrade != 0) PlayerController.Instance.UpgradeGravity(upgrade.gravityUpgrade);
-        if (upgrade.bulletSizeUpgrade != 0) PlayerController.Instance.UpgradeBulletSize(upgrade.bulletSizeUpgrade);
-
-        if (upgrade.minimap) PlayerController.Instance.MinimapUpgrade();
-        if (upgrade.fiveShot) PlayerController.Instance.BurstShotUpgrade();
-        if (upgrade.ricochet) PlayerController.Instance.RicochetUpgrade();
-        if(upgrade.spreadShot) PlayerController.Instance.SpreadShotUpgrade();
-        if(upgrade.bulletSize) PlayerController.Instance.BulletSizeChangedUpgrade();
-
-        ExitUpgradeMode(upgrade);
-    }
-
-    private void UpdateHUD()
+    public void UpdateHUD()
     {
         //Time Display
         float time = Time.timeSinceLevelLoad;
         int minutes = Mathf.FloorToInt(time / 60f);
         int seconds = Mathf.FloorToInt(time % 60f);
-        timeTXT.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        currentTime = string.Format("{0:00}:{1:00}", minutes, seconds);
+        timeTXT.text = currentTime;
 
         //Health Display
-        healthTXT.text = PlayerController.Instance.CurrentHealth.ToString();
+        if (player != null)
+        {
+            healthTXT.text = player.CurrentHealth.ToString();
+        }
     }
 
     public void GameOver()
@@ -96,11 +89,39 @@ public class GameManager : MonoBehaviour
         Cursor.visible = true;
         _gameOverScreen.SetActive(true);
         isMovementLocked = true;
+
+        endGameTimeTXT.text = currentTime;
+        endGameKillsTXT.text = killCount.ToString();
+
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1f;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        isMovementLocked = false;
+        SceneManager.LoadScene(0);
     }
 
     public void KillEnemy()
     {
         killCount++;
         killsTXT.text = killCount.ToString();
+    }
+
+    public void UpgradeChosen(Upgrade upgrade)
+    {
+        ExitUpgradeMode(upgrade);
+    }
+
+    public Vector3 GetPlayerPosition()
+    {
+        return player.transform.position;
+    }
+
+    public bool PlayerExists()
+    {
+        return player != null;
     }
 }

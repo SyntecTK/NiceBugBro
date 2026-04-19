@@ -13,7 +13,6 @@ public class BulletParent : MonoBehaviour
         else
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
     }
 

@@ -26,7 +26,6 @@ public class UpgradeManager : MonoBehaviour
         else
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         thisRunUpgrades = new List<Upgrade>(upgrades);
         

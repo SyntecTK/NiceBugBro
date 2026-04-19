@@ -21,7 +21,6 @@ public class ItemPickupManager : MonoBehaviour
         else
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         ResetPickupCooldown();
     }

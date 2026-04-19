@@ -46,9 +46,9 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable
 
     private void MoveTowardsPlayer()
     {
-        if (PlayerController.Instance == null) return;
+        if (!GameManager.Instance.PlayerExists()) return;
 
-        Vector3 playerPos = PlayerController.Instance.transform.position;
+        Vector3 playerPos = GameManager.Instance.GetPlayerPosition();
         Vector3 direction = playerPos - transform.position;
         //direction.y = 0f;
         direction.Normalize();
@@ -80,9 +80,9 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable
 
     private void Shoot()
     {
-        if (PlayerController.Instance == null || firePoint == null) return;
+        if (!GameManager.Instance.PlayerExists() || firePoint == null) return;
 
-        Vector3 direction = (PlayerController.Instance.transform.position - firePoint.position).normalized;
+        Vector3 direction = (GameManager.Instance.GetPlayerPosition() - firePoint.position).normalized;
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.LookRotation(direction));
         bullet.GetComponent<Bullet>().Initialize(bulletDamage);
         bullet.GetComponent<Rigidbody>().linearVelocity = direction * bulletSpeed;

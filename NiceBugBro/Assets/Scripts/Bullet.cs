@@ -75,7 +75,7 @@ public class Bullet : MonoBehaviour
     }
 
 
-    
+
 
     private IEnumerator SelfDestroy()
     {
@@ -84,18 +84,36 @@ public class Bullet : MonoBehaviour
         DestroyBullet();
     }
 
-    private void OnCollisionEnter(Collision other)
+    // private void OnCollisionEnter(Collision other)
+    // {
+    //     if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Enemy"))
+    //     {
+    //         other.gameObject.GetComponent<IDamageable>().TakeDamage(_damage);
+    //     }
+    //     if (!other.gameObject.CompareTag("Bullet") && !_ricochet) DestroyBullet();
+
+    //     // if (!other.gameObject.CompareTag("Player") && !other.gameObject.CompareTag("Enemy"))
+    //     // {
+    //     //     Ricochet(other);
+    //     // }
+    // }
+
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player") || other.gameObject.CompareTag("Enemy"))
+        if (other.gameObject.CompareTag("Player"))
+        {
+
+            other.gameObject.GetComponentInParent<IDamageable>().TakeDamage(_damage);
+            DestroyBullet();
+        }
+        else if (other.gameObject.CompareTag("Enemy"))
         {
             other.gameObject.GetComponent<IDamageable>().TakeDamage(_damage);
+            DestroyBullet();
         }
-        if(!other.gameObject.CompareTag("Bullet") && !_ricochet) DestroyBullet();
 
-        // if (!other.gameObject.CompareTag("Player") && !other.gameObject.CompareTag("Enemy"))
-        // {
-        //     Ricochet(other);
-        // }
+        if (other.gameObject.CompareTag("PlayerBody") || other.gameObject.CompareTag("Bullet") || _ricochet) return;
+        DestroyBullet();
     }
 
     // private void Ricochet(Collision other)
