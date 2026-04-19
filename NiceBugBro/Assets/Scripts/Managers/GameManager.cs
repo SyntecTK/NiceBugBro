@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,6 +15,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text timeTXT;
     [SerializeField] private TMP_Text healthTXT;
     [SerializeField] private TMP_Text killsTXT;
+    [SerializeField] private GameObject miniMap;
+    [SerializeField] private List<Sprite> miniMapIcons;
 
     [SerializeField] private TMP_Text endGameKillsTXT;
     [SerializeField] private TMP_Text endGameTimeTXT;
@@ -112,6 +116,7 @@ public class GameManager : MonoBehaviour
 
     public void UpgradeChosen(Upgrade upgrade)
     {
+        player.UpgradeChosen(upgrade);
         ExitUpgradeMode(upgrade);
     }
 
@@ -124,4 +129,17 @@ public class GameManager : MonoBehaviour
     {
         return player != null;
     }
+
+    public void ShowMinimap()
+    {
+        int randomIndex = Random.Range(0, miniMapIcons.Count);
+        miniMap.SetActive(true);
+        miniMap.GetComponent<Image>().sprite = miniMapIcons[randomIndex];
+    }
+
+    public int GetTimeFactor()
+    {
+        return (int)(Time.timeSinceLevelLoad / 10);
+    }
+
 }

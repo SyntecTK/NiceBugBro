@@ -14,13 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Upgrade
   upgradeName: Mini Map
   description: Gain access to a Minimap!
-  unique: 1
+  unique: 0
   playerSpeedUpgrade: 0
+  playerLookSensitivityUpgrade: 0
   bulletSpeedUpgrade: 0
   bulletDamageUpgrade: 0
-  bulletLifeTimeUpgrade: 0
+  bulletSizeUpgrade: 0
   healthUpgrade: 0
   jumpUpgrade: 0
+  gravityUpgrade: 0
   minimap: 1
   fiveShot: 0
   ricochet: 0
+  spreadShot: 0
+  bulletSize: 0

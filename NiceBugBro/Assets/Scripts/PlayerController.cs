@@ -295,7 +295,7 @@ public class PlayerController : MonoBehaviour, IDamageable
     public void MinimapUpgrade()
     {
         minimap = true;
-        //TODO: Hier MinimapFuckery
+        GameManager.Instance.ShowMinimap();
     }
 
     public void BurstShotUpgrade()

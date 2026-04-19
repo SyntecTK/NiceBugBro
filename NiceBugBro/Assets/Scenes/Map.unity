@@ -1131,6 +1131,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7574277599803914921, guid: 4c843b1b351862040b5ae8b1b4f46c84, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9062432165434769455, guid: 4c843b1b351862040b5ae8b1b4f46c84, type: 3}
       propertyPath: m_SizeDelta.x
       value: 470.82
@@ -1301,6 +1305,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &901493736 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7574277599803914921, guid: 4c843b1b351862040b5ae8b1b4f46c84, type: 3}
+  m_PrefabInstance: {fileID: 734160084}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &933983719
 GameObject:
   m_ObjectHideFlags: 0
@@ -1316,7 +1325,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!114 &933983720
 MonoBehaviour:
@@ -1335,6 +1344,12 @@ MonoBehaviour:
   timeTXT: {fileID: 46514562}
   healthTXT: {fileID: 449035553}
   killsTXT: {fileID: 1076874400}
+  miniMap: {fileID: 901493736}
+  miniMapIcons:
+  - {fileID: 21300000, guid: 9052e08470b5e014cbcb164680752f2e, type: 3}
+  - {fileID: 21300000, guid: 4f4bc794235d025458290c775b8fc97e, type: 3}
+  - {fileID: 21300000, guid: 8ce93969faaaf2641af667a85c80d4b1, type: 3}
+  - {fileID: 21300000, guid: 64e8db4ec100f8f47bf86ebc0edacc53, type: 3}
   endGameKillsTXT: {fileID: 1389967745}
   endGameTimeTXT: {fileID: 1279338644}
 --- !u!4 &933983721

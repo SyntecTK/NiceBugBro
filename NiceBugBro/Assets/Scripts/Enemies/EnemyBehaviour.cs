@@ -26,6 +26,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable
     private Vector3 hoverPosition;
     private float shootTimer;
     private float bobOffset;
+    private int timeFactor = 1;
 
     private void Start()
     {
@@ -42,6 +43,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable
         MoveTowardsPlayer();
         //Hover();
         HandleShooting();
+        timeFactor = GameManager.Instance.GetTimeFactor();
     }
 
     private void MoveTowardsPlayer()
@@ -52,7 +54,6 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable
         Vector3 direction = playerPos - transform.position;
         //direction.y = 0f;
         direction.Normalize();
-
         transform.position += direction * moveSpeed * Time.deltaTime;
 
         transform.LookAt(new Vector3(playerPos.x, transform.position.y, playerPos.z));
@@ -71,6 +72,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable
     private void HandleShooting()
     {
         shootTimer -= Time.deltaTime;
+        shootInterval -= timeFactor / 10f;
         if (shootTimer <= 0f)
         {
             Shoot();
