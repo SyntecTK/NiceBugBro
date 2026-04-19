@@ -111,7 +111,7 @@ MonoBehaviour:
   bobAmplitude: 0.3
   bobFrequency: 2
   moveSpeed: 5
-  bulletSpeed: 20
+  bulletSpeed: 40
   bulletDamage: 10
   shootInterval: 2
   enemyBullet: 1

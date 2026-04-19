@@ -15,7 +15,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable
     [SerializeField] private float moveSpeed = 3f;
 
     [Header("Shooting Settings")]
-    [SerializeField] private float bulletSpeed = 10f;
+    [SerializeField] private float bulletSpeed = 25f;
     [SerializeField] private int bulletDamage = 10;
     [SerializeField] private float shootInterval = 2f;
     [SerializeField] private bool enemyBullet = true;
