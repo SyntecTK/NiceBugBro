@@ -10,7 +10,13 @@ public class MusicManager : MonoBehaviour
     [Range(0f, 1f)]
     [SerializeField] private float musicVolume = 0.5f;
 
+    [Header("Loop Settings")]
+    [Tooltip("If true, the music will loop back to the Loop Point Time instead of the beginning.")]
+    [SerializeField] private bool useLoopPoint = false;
+    [SerializeField] private float loopPointTime = 0f;
+
     private AudioSource musicSource;
+    private float lastPlayTime;
 
     private void Awake()
     {
@@ -47,6 +53,21 @@ public class MusicManager : MonoBehaviour
         musicSource.clip = backgroundMusic;
         musicSource.volume = musicVolume;
         musicSource.Play();
+        lastPlayTime = 0f;
+    }
+    private void Update()
+    {
+        if (musicSource != null && musicSource.isPlaying && useLoopPoint)
+        {
+            float currentTime = musicSource.time;
+
+            if (currentTime < lastPlayTime)
+            {
+                musicSource.time = loopPointTime + currentTime;
+            }
+
+            lastPlayTime = musicSource.time;
+        }
     }
 
 
