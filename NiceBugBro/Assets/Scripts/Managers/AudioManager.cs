@@ -61,7 +61,6 @@ public class AudioManager : MonoBehaviour
             
             globalAudioSource.pitch = Random.Range(group.minPitch, group.maxPitch);
             globalAudioSource.PlayOneShot(clip, group.volume);
-            Debug.Log(clip.name);
         }
         else
         {

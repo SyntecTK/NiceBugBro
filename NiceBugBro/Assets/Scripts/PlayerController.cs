@@ -373,27 +373,6 @@ public class PlayerController : MonoBehaviour, IDamageable
     }
 
     //----------------------------------------------------------------------------------------------------------------------------
-
-    public void UpgradeChosen(Upgrade upgrade)
-    {
-        //TODO: Hier upgrade anwenden auf player
-        if (upgrade.playerSpeedUpgrade != 0) UpgradePlayerSpeed(upgrade.playerSpeedUpgrade);
-        if (upgrade.playerLookSensitivityUpgrade != 0) UpgradePlayerLookSensitivity(upgrade.playerLookSensitivityUpgrade);
-        if (upgrade.bulletSpeedUpgrade != 0) UpgradeBulletSpeed(upgrade.bulletSpeedUpgrade);
-        if (upgrade.bulletDamageUpgrade != 0) UpgradeBulletDamage(upgrade.bulletDamageUpgrade);
-        //if (upgrade.bulletLifeTimeUpgrade != 0) UpgradeBulletLifeTime(upgrade.bulletLifeTimeUpgrade);
-        if (upgrade.healthUpgrade != 0) UpgradeHealth(upgrade.healthUpgrade);
-        if (upgrade.jumpUpgrade != 0) UpgradeJump(upgrade.jumpUpgrade);
-        if (upgrade.gravityUpgrade != 0) UpgradeGravity(upgrade.gravityUpgrade);
-        if (upgrade.bulletSizeUpgrade != 0) UpgradeBulletSize(upgrade.bulletSizeUpgrade);
-
-        if (upgrade.minimap) MinimapUpgrade();
-        if (upgrade.fiveShot) BurstShotUpgrade();
-        if (upgrade.ricochet) RicochetUpgrade();
-        if (upgrade.spreadShot) SpreadShotUpgrade();
-        if (upgrade.bulletSize) BulletSizeChangedUpgrade();
-
-        //ExitUpgradeMode(upgrade);
-    }
+    
 
 }

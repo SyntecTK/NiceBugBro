@@ -18,6 +18,10 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable
     [SerializeField] private float bulletSpeed = 10f;
     [SerializeField] private int bulletDamage = 10;
     [SerializeField] private float shootInterval = 2f;
+    [SerializeField] private bool enemyBullet = true;
+    [SerializeField] private bool ricochet = false;
+    [SerializeField] private int ricochetAmount = 0;
+    [SerializeField] private float bulletSize = 0.1f;
 
     [Header("Enemy Stats")]
     [SerializeField] private int maxHealth = 20;
@@ -36,6 +40,15 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable
         bobOffset = Random.Range(0f, Mathf.PI * 2f);
 
         currentHealth = maxHealth;
+        EventManager.EnemySpawned(this);
+    }
+
+    public void UpgradeApply(bool ricochet, int ricochetAmount, float bulletSize, float speed)
+    {
+        this.ricochet = ricochet;
+        this.ricochetAmount = ricochetAmount;
+        this.bulletSize = bulletSize;
+        moveSpeed = speed;
     }
 
     private void Update()
@@ -72,7 +85,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable
     private void HandleShooting()
     {
         shootTimer -= Time.deltaTime;
-        shootInterval -= timeFactor / 10f;
+        //shootInterval -= timeFactor / 10f;
         if (shootTimer <= 0f)
         {
             Shoot();
@@ -86,7 +99,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable
 
         Vector3 direction = (GameManager.Instance.GetPlayerPosition() - firePoint.position).normalized;
         GameObject bullet = Instantiate(bulletPrefab, firePoint.position, Quaternion.LookRotation(direction));
-        bullet.GetComponent<Bullet>().Initialize(bulletDamage);
+        bullet.GetComponent<Bullet>().Initialize(enemyBullet, bulletDamage, ricochet, ricochetAmount, bulletSize);
         bullet.GetComponent<Rigidbody>().linearVelocity = direction * bulletSpeed;
         AudioManager.Instance.Play3DSound(SoundType.EnemyShot, transform.position);
     }
@@ -96,6 +109,7 @@ public class EnemyBehaviour : MonoBehaviour, IDamageable
         currentHealth -= damage;
         if (currentHealth <= 0)
         {
+            EventManager.EnemyDied(this);
             AudioManager.Instance.Play3DSound(SoundType.EnemyKill, transform.position);
             GameManager.Instance.KillEnemy();
             Destroy(gameObject);

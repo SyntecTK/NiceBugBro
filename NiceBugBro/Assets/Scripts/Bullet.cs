@@ -8,6 +8,7 @@ public class Bullet : MonoBehaviour
 {
     private int _damage;
     private bool _ricochet;
+    private bool _enemyBullet;
     private int _ricochetAmount;
     [SerializeField] private Rigidbody _rigidbody;
     public void Initialize()
@@ -20,6 +21,7 @@ public class Bullet : MonoBehaviour
 
     public void Initialize(int damage)
     {
+        _enemyBullet = false;
         _damage = damage;
         _ricochet = false;
         _ricochetAmount = 0;
@@ -28,6 +30,7 @@ public class Bullet : MonoBehaviour
 
     public void Initialize(int damage, float size)
     {
+        _enemyBullet = false;
         _damage = damage;
         _ricochet = false;
         _ricochetAmount = 0;
@@ -37,6 +40,7 @@ public class Bullet : MonoBehaviour
 
     public void Initialize(int damage, bool ricochet, int ricochetAmount)
     {
+        _enemyBullet = false;
         _damage = damage;
         _ricochet = ricochet;
         _ricochetAmount = ricochetAmount;
@@ -45,6 +49,16 @@ public class Bullet : MonoBehaviour
 
     public void Initialize(int damage, bool ricochet, int ricochetAmount, float size)
     {
+        _enemyBullet = false;
+        _damage = damage;
+        _ricochet = ricochet;
+        _ricochetAmount = ricochetAmount;
+        transform.localScale = new Vector3(size, size, size);
+        BulletParent.Instance.AddBullet(this.gameObject);
+    }   
+    public void Initialize(bool enemyBullet, int damage, bool ricochet, int ricochetAmount, float size)
+    {
+        _enemyBullet = enemyBullet;
         _damage = damage;
         _ricochet = ricochet;
         _ricochetAmount = ricochetAmount;
@@ -64,7 +78,7 @@ public class Bullet : MonoBehaviour
         if (!Physics.Raycast(_rigidbody.position, direction, out RaycastHit hit, distance,
                 LayerMask.GetMask("Ground"))) return;
 
-        if (hit.collider.CompareTag("Player") || hit.collider.CompareTag("Enemy"))
+        if (hit.collider.CompareTag("Player") || (hit.collider.CompareTag("Enemy") && !_enemyBullet))
         {
             hit.collider.GetComponent<IDamageable>()?.TakeDamage(_damage);
             DestroyBullet();
@@ -106,7 +120,7 @@ public class Bullet : MonoBehaviour
             other.gameObject.GetComponentInParent<IDamageable>().TakeDamage(_damage);
             DestroyBullet();
         }
-        else if (other.gameObject.CompareTag("Enemy"))
+        else if (other.gameObject.CompareTag("Enemy") && !_enemyBullet)
         {
             other.gameObject.GetComponent<IDamageable>().TakeDamage(_damage);
             DestroyBullet();

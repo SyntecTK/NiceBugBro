@@ -10,9 +10,11 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject _upgradeScreen;
     [SerializeField] private GameObject _gameOverScreen;
+    [SerializeField] private EnemySpawner _enemySpawner;
 
-    [Header("UI References")]
-    [SerializeField] private TMP_Text timeTXT;
+    [Header("UI References")] [SerializeField]
+    private TMP_Text timeTXT;
+
     [SerializeField] private TMP_Text healthTXT;
     [SerializeField] private TMP_Text killsTXT;
     [SerializeField] private GameObject miniMap;
@@ -28,6 +30,7 @@ public class GameManager : MonoBehaviour
     private int killCount;
     private bool isMovementLocked;
     public bool IsMovementLocked => isMovementLocked;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -96,7 +99,6 @@ public class GameManager : MonoBehaviour
 
         endGameTimeTXT.text = currentTime;
         endGameKillsTXT.text = killCount.ToString();
-
     }
 
     public void RestartGame()
@@ -116,7 +118,34 @@ public class GameManager : MonoBehaviour
 
     public void UpgradeChosen(Upgrade upgrade)
     {
-        player.UpgradeChosen(upgrade);
+        //TODO: Hier upgrade anwenden auf player
+        if (upgrade.playerSpeedUpgrade != 0)
+        {
+            player.UpgradePlayerSpeed(upgrade.playerSpeedUpgrade);
+            _enemySpawner.SpeedUpgrade(upgrade.playerSpeedUpgrade);
+        }
+        if (upgrade.playerLookSensitivityUpgrade != 0) player.UpgradePlayerLookSensitivity(upgrade.playerLookSensitivityUpgrade);
+        if (upgrade.bulletSpeedUpgrade != 0) player.UpgradeBulletSpeed(upgrade.bulletSpeedUpgrade);
+        if (upgrade.bulletDamageUpgrade != 0) player.UpgradeBulletDamage(upgrade.bulletDamageUpgrade);
+        //if (upgrade.bulletLifeTimeUpgrade != 0) UpgradeBulletLifeTime(upgrade.bulletLifeTimeUpgrade);
+        if (upgrade.healthUpgrade != 0) player.UpgradeHealth(upgrade.healthUpgrade);
+        if (upgrade.jumpUpgrade != 0) player.UpgradeJump(upgrade.jumpUpgrade);
+        if (upgrade.gravityUpgrade != 0) player.UpgradeGravity(upgrade.gravityUpgrade);
+        if (upgrade.bulletSizeUpgrade != 0)
+        {
+            player.UpgradeBulletSize(upgrade.bulletSizeUpgrade);
+            _enemySpawner.BulletSizeUpgrade(upgrade.bulletSizeUpgrade);
+        }
+        if (upgrade.minimap) player.MinimapUpgrade();
+        if (upgrade.fiveShot) player.BurstShotUpgrade();
+        if (upgrade.ricochet)
+        {
+            player.RicochetUpgrade();
+            _enemySpawner.RicochetUpgrade();
+        }
+        if (upgrade.spreadShot) player.SpreadShotUpgrade();
+        if (upgrade.bulletSize) player.BulletSizeChangedUpgrade();
+
         ExitUpgradeMode(upgrade);
     }
 
@@ -141,5 +170,4 @@ public class GameManager : MonoBehaviour
     {
         return (int)(Time.timeSinceLevelLoad / 10);
     }
-
 }
