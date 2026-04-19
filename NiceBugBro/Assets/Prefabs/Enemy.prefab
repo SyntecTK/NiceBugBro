@@ -114,6 +114,10 @@ MonoBehaviour:
   bulletSpeed: 20
   bulletDamage: 10
   shootInterval: 2
+  enemyBullet: 1
+  ricochet: 0
+  ricochetAmount: 0
+  bulletSize: 0.1
   maxHealth: 20
   currentHealth: 0
 --- !u!64 &5136352399422582404
