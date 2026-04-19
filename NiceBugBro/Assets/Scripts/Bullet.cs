@@ -55,7 +55,7 @@ public class Bullet : MonoBehaviour
         _ricochetAmount = ricochetAmount;
         transform.localScale = new Vector3(size, size, size);
         BulletParent.Instance.AddBullet(this.gameObject);
-    }   
+    }
     public void Initialize(bool enemyBullet, int damage, bool ricochet, int ricochetAmount, float size)
     {
         _enemyBullet = enemyBullet;
@@ -126,7 +126,7 @@ public class Bullet : MonoBehaviour
             DestroyBullet();
         }
 
-        if (other.gameObject.CompareTag("PlayerBody") || other.gameObject.CompareTag("Bullet") || _ricochet) return;
+        if (other.gameObject.CompareTag("PlayerBody") || other.gameObject.CompareTag("Bullet") || (other.gameObject.CompareTag("Enemy") && _enemyBullet) || _ricochet) return;
         DestroyBullet();
     }
 

@@ -18,13 +18,13 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private float bulletSize = 0.1f;
     [SerializeField] private float enemySpeed = 3f;
     private float spawnTimer;
-    
+
     private List<EnemyBehaviour> spawnedEnemies = new List<EnemyBehaviour>();
 
     private void Start()
     {
         ResetTimer();
-        for(int i = 7; i > 0; i--)
+        for (int i = 7; i > 0; i--)
         {
             SpawnEnemy();
         }
@@ -35,7 +35,7 @@ public class EnemySpawner : MonoBehaviour
         EventManager.EnemySpawnedEvent += AddEnemyToList;
         EventManager.EnemyDiedEvent += RemoveEnemyFromList;
     }
-    
+
     private void OnDisable()
     {
         EventManager.EnemySpawnedEvent -= AddEnemyToList;
@@ -56,7 +56,9 @@ public class EnemySpawner : MonoBehaviour
     {
         int randomIndex = Random.Range(0, spawnPoints.Count);
         GameObject spawnPoint = spawnPoints[randomIndex];
-        Instantiate(enemyPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
+        GameObject newEnemy = Instantiate(enemyPrefab, spawnPoint.transform.position, spawnPoint.transform.rotation);
+        EnemyBehaviour enemyBehaviour = newEnemy.GetComponent<EnemyBehaviour>();
+        enemyBehaviour.UpgradeApply(ricochet, ricochetAmount, bulletSize, enemySpeed);
     }
 
     private void ResetTimer()
@@ -64,16 +66,16 @@ public class EnemySpawner : MonoBehaviour
         spawnTimer = Random.Range(minSpawnTime, maxSpawnTime);
     }
 
-        
+
     public void SpeedUpgrade(int amount)
     {
         enemySpeed += 1.5f; //TODO Burn this
         UpdateEnemyUpgrades();
     }
-    
+
     public void RicochetUpgrade()
     {
-        if(!ricochet) ricochet = true;
+        if (!ricochet) ricochet = true;
         ricochetAmount += 2;
         UpdateEnemyUpgrades();
     }
@@ -95,11 +97,11 @@ public class EnemySpawner : MonoBehaviour
     {
         spawnedEnemies.Add(newEnemy);
     }
-    
+
     public void RemoveEnemyFromList(EnemyBehaviour enemyToRemove)
     {
-        if(spawnedEnemies.Contains(enemyToRemove))
-        spawnedEnemies.Remove(enemyToRemove);
+        if (spawnedEnemies.Contains(enemyToRemove))
+            spawnedEnemies.Remove(enemyToRemove);
     }
 
 }
