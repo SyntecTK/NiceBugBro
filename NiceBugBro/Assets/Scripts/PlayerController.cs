@@ -333,8 +333,6 @@ public class PlayerController : MonoBehaviour, IDamageable
 
         InitializeBullet(bullet);
 
-        AudioManager.Instance.Play2DSound(SoundType.GunShot);
-
         bullet.GetComponent<Rigidbody>().linearVelocity = firePoint.forward * currentBulletSpeed;
     }
 
@@ -370,6 +368,7 @@ public class PlayerController : MonoBehaviour, IDamageable
         {
             bullet.GetComponent<Bullet>().Initialize(currentBulletDamage, true, ricochetAmount, currentBulletSize);
         }
+        AudioManager.Instance.Play2DSound(SoundType.GunShot);
     }
 
     //----------------------------------------------------------------------------------------------------------------------------

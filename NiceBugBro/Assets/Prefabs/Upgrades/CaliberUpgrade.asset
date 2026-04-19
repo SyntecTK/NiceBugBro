@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CaliberUpgrade
   m_EditorClassIdentifier: Assembly-CSharp::Upgrade
   upgradeName: Caliber 9000
-  description: Smash Enemies with these Bad Boys
+  description: Larger Bullets. Size matters!
   unique: 0
   playerSpeedUpgrade: 0
   playerLookSensitivityUpgrade: 0

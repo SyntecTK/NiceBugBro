@@ -13,14 +13,18 @@ MonoBehaviour:
   m_Name: RicochetUpgrade
   m_EditorClassIdentifier: Assembly-CSharp::Upgrade
   upgradeName: Ricochet
-  description: Your Bullets now bounce of Terrain!
+  description: Enhanced Bullet Physics.
   unique: 0
   playerSpeedUpgrade: 0
+  playerLookSensitivityUpgrade: 0
   bulletSpeedUpgrade: 0
   bulletDamageUpgrade: 0
-  bulletLifeTimeUpgrade: 3
+  bulletSizeUpgrade: 0
   healthUpgrade: 0
   jumpUpgrade: 0
+  gravityUpgrade: 0
   minimap: 0
   fiveShot: 0
   ricochet: 1
+  spreadShot: 0
+  bulletSize: 0
